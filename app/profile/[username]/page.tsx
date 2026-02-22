@@ -1,0 +1,328 @@
+'use client';
+
+import { use, useState } from 'react';
+import { useQuery, useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { useAuth } from '@/hooks/use-auth';
+import { StoryBubble } from '@/components/story-bubble';
+import { StoryViewer } from '@/components/story-viewer';
+import { UserPlus, UserMinus, Star, Eye } from 'lucide-react';
+import { motion } from 'motion/react';
+import Image from 'next/image';
+import type { HighlightStory, Story } from '@/lib/types';
+
+function HandDrawnCardBorder() {
+  return (
+    <svg
+      className='absolute inset-0 w-full h-full pointer-events-none'
+      viewBox='0 0 500 300'
+      preserveAspectRatio='none'
+    >
+      <motion.path
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1.2, ease: 'easeInOut' }}
+        d='M15,15 Q10,10 15,20 T25,30 Q20,35 30,40 T40,50 Q35,55 45,60 T55,70 Q50,75 60,80 T70,90 Q65,95 75,100 T85,110 Q80,115 90,120 T100,130 Q95,135 105,140 T115,150 Q110,155 120,160 T130,170 Q125,175 135,180 T145,190 Q140,195 150,200 T160,210 Q155,215 165,220 T175,230 Q170,235 180,240 T190,250 Q185,255 195,260 T205,270 Q200,275 210,280 T220,280 L480,280 Q490,275 490,265 L490,25 Q485,15 475,15 L25,15 Q20,10 15,15 Z'
+        fill='none'
+        stroke='black'
+        strokeWidth='3'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  );
+}
+
+export default function ProfilePage({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}) {
+  const { username } = use(params);
+  const { user: currentUser } = useAuth();
+  const [selectedStoryId, setSelectedStoryId] = useState<string | null>(null);
+
+  const data = useQuery(api.follows.getProfile, {
+    username,
+    currentUserId: currentUser?.id,
+  });
+
+  const follow = useMutation(api.follows.follow);
+  const unfollow = useMutation(api.follows.unfollow);
+  const setHighlight = useMutation(api.stories.setHighlight);
+  const unsetHighlight = useMutation(api.stories.unsetHighlight);
+
+  const profile = data?.user ?? null;
+  const highlights = (data?.highlights ?? []) as unknown as HighlightStory[];
+  const isFollowing = profile?.isFollowing ?? false;
+  const isOwnProfile = currentUser?.id === profile?.id;
+
+  const handleFollow = async () => {
+    if (!profile) return;
+
+    try {
+      if (isFollowing)
+        await unfollow({
+          followerId: currentUser!.id,
+          followingId: profile.id,
+        });
+      else
+        await follow({ followerId: currentUser!.id, followingId: profile.id });
+
+      window.location.reload();
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleHighlight = async (storyId: string, isHighlighted: boolean) => {
+    if (!currentUser?.id) return;
+
+    try {
+      if (isHighlighted)
+        await unsetHighlight({
+          storyId: storyId as never,
+          userId: currentUser.id,
+        });
+      else
+        await setHighlight({
+          storyId: storyId as never,
+          userId: currentUser.id,
+        });
+    } catch {
+      // ignore
+    }
+  };
+
+  if (data === undefined) {
+    return (
+      <div className='min-h-screen flex items-center justify-center bg-[#fefefe]'>
+        <div className='flex flex-col items-center gap-4'>
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+            className='w-12 h-12 border-[3px] border-black border-t-transparent rounded-full'
+          />
+
+          <p className='text-black/70 text-sm font-(--font-sketch)'>
+            Loading profile...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className='min-h-screen flex items-center justify-center bg-[#fefefe]'>
+        <div className='text-center space-y-4'>
+          <h2 className='text-3xl text-black font-(--font-sketch)'>
+            User not found
+          </h2>
+
+          <p className='text-black/70 font-(--font-sketch)'>
+            This user doesn&apos;t exist or has been removed.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const selectedStory = highlights.find((s) => s.id === selectedStoryId);
+
+  return (
+    <div className='min-h-screen bg-[#faf8f5]'>
+      <div className='max-w-4xl mx-auto px-6 py-8'>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className='relative p-8 mb-8 bg-white border-[3px] border-black rounded-2xl'
+          style={{ transform: 'rotate(-0.5deg)' }}
+        >
+          <HandDrawnCardBorder />
+
+          <div className='relative z-10 flex items-start gap-6'>
+            <div className='relative'>
+              <Image
+                src={profile.avatarUrl ?? ''}
+                alt={profile.username ?? ''}
+                className='w-24 h-24 rounded-2xl border-[3px] border-black'
+                width={96}
+                height={96}
+              />
+            </div>
+
+            <div className='flex-1'>
+              <h1 className='text-4xl text-black mb-1 font-(--font-sketch)'>
+                {profile.displayName ?? profile.username}
+              </h1>
+
+              <p className='text-black/70 mb-6 text-sm font-(--font-sketch)'>
+                @{profile.username}
+              </p>
+
+              {!isOwnProfile && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleFollow}
+                  className={`flex items-center gap-2 px-6 py-3 border-[3px] border-black text-lg transition-all rounded-xl font-(--font-sketch) ${
+                    isFollowing
+                      ? 'bg-black text-white hover:bg-white hover:text-black'
+                      : 'bg-white text-black hover:bg-black hover:text-white'
+                  }`}
+                >
+                  {isFollowing ? (
+                    <>
+                      <UserMinus className='w-4 h-4' /> Unfollow
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus className='w-4 h-4' /> Follow
+                    </>
+                  )}
+                </motion.button>
+              )}
+            </div>
+          </div>
+        </motion.div>
+
+        {highlights.length > 0 && (
+          <div>
+            <div className='flex items-center justify-between mb-6'>
+              <h2
+                className='text-4xl text-black font-(--font-sketch)'
+                style={{ transform: 'rotate(-1deg)' }}
+              >
+                Highlights
+              </h2>
+
+              <span className='text-sm text-black/60 font-(--font-sketch)'>
+                {highlights.length} saved
+              </span>
+            </div>
+
+            <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+              {highlights.map((story) => (
+                <div
+                  key={story.id}
+                  className='group relative p-6 bg-white border-[3px] border-black cursor-pointer aspect-square flex flex-col items-center justify-center gap-3 transition-all hover:scale-105 rounded-2xl'
+                >
+                  <HandDrawnCardBorder />
+
+                  <div
+                    className='relative z-10 w-full h-full flex flex-col items-center justify-center'
+                    onClick={() => setSelectedStoryId(story.id)}
+                  >
+                    <StoryBubble story={story as Story} />
+
+                    {story.commit && (
+                      <p className='text-xs text-black/70 text-center line-clamp-2 mt-2 font-(--font-sketch)'>
+                        {story.commit.message?.split('\n')[0]}
+                      </p>
+                    )}
+
+                    <div className='flex items-center gap-1 mt-2 text-xs text-black/60'>
+                      <Eye className='w-3 h-3' />
+                      <span>{story.viewCount ?? 0}</span>
+                    </div>
+                  </div>
+
+                  {isOwnProfile && (
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleHighlight(story.id, story.isHighlight);
+                      }}
+                      className='absolute top-2 right-2 z-20 p-1.5 bg-white border border-black rounded-full hover:bg-yellow-50'
+                    >
+                      <Star
+                        className={`w-4 h-4 ${story.isHighlight ? 'fill-yellow-400 text-yellow-500' : 'text-gray-400'}`}
+                      />
+                    </motion.button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {highlights.length === 0 && isOwnProfile && (
+          <div className='text-center py-16'>
+            <p className='text-black/70 mb-1 font-(--font-sketch)'>
+              No highlights yet
+            </p>
+
+            <p className='text-sm text-black/60 font-(--font-sketch)'>
+              Pin your favorite stories to save them permanently
+            </p>
+          </div>
+        )}
+
+        {isOwnProfile && highlights.length > 0 && (
+          <div className='mt-8 relative p-6 bg-white border-[3px] border-black rounded-2xl'>
+            <HandDrawnCardBorder />
+
+            <div className='relative z-10'>
+              <h2 className='text-2xl text-black mb-4 font-(--font-sketch)'>
+                Insights
+              </h2>
+
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+                <div className='p-4 bg-[#faf8f5] border-2 border-black rounded-lg'>
+                  <div className='flex items-center gap-2 mb-1'>
+                    <Eye className='w-5 h-5' />
+                    <h3 className='text-base font-(--font-sketch)'>
+                      Total Views
+                    </h3>
+                  </div>
+
+                  <p className='text-2xl font-bold'>
+                    {highlights.reduce((sum, s) => sum + (s.viewCount ?? 0), 0)}
+                  </p>
+                </div>
+
+                <div className='p-4 bg-[#faf8f5] border-2 border-black rounded-lg'>
+                  <div className='flex items-center gap-2 mb-1'>
+                    <Star className='w-5 h-5 text-yellow-500 fill-yellow-500' />
+                    <h3 className='text-base font-(--font-sketch)'>
+                      Highlights
+                    </h3>
+                  </div>
+
+                  <p className='text-2xl font-bold'>{highlights.length}</p>
+                </div>
+
+                <div className='p-4 bg-[#faf8f5] border-2 border-black rounded-lg'>
+                  <h3 className='text-base font-(--font-sketch)'>Avg Views</h3>
+
+                  <p className='text-2xl font-bold'>
+                    {highlights.length > 0
+                      ? Math.round(
+                          highlights.reduce(
+                            (sum, s) => sum + (s.viewCount ?? 0),
+                            0
+                          ) / highlights.length
+                        )
+                      : 0}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {selectedStory && (
+        <StoryViewer
+          key={selectedStory.id}
+          story={selectedStory}
+          onClose={() => setSelectedStoryId(null)}
+          currentUserId={currentUser?.id ?? null}
+        />
+      )}
+    </div>
+  );
+}
