@@ -5,14 +5,23 @@ import { useConvex } from 'convex/react';
 import { authClient } from '@/lib/auth-client';
 import { api } from '@/convex/_generated/api';
 
-async function syncGitHubFollowing(): Promise<void> {
+async function syncGitHubFollowing(userId: string): Promise<void> {
+  const result = await authClient.getAccessToken({
+    providerId: 'github',
+  });
+
+  const accessToken =
+    result && 'data' in result && result.data
+      ? result.data.accessToken
+      : undefined;
+
+      if (!accessToken) return;
+
   const res = await fetch('/api/sync-github-following', {
     method: 'POST',
-    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ accessToken, userId }),
   });
-  if (!res.ok && process.env.NODE_ENV === 'development') {
-    console.error('[sync-github-following] Failed:', res.status);
-  }
 }
 
 export function useAuth() {
@@ -40,7 +49,7 @@ export function useAuth() {
             undefined,
         });
 
-        syncGitHubFollowing().catch(() => {});
+        syncGitHubFollowing(user.id).catch(() => {});
       }
 
       return { user, session: sessionData };

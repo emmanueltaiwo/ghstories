@@ -34,47 +34,20 @@ async function fetchAllGitHubFollowing(
 
 export async function POST(request: NextRequest) {
   try {
-    const baseUrl =
-      process.env.SITE_URL ??
-      process.env.NEXT_PUBLIC_SITE_URL ??
-      request.nextUrl.origin;
+    const body = (await request.json()) as {
+      accessToken?: string;
+      userId?: string;
+    };
+    const { accessToken, userId } = body;
 
-    const tokenRes = await fetch(`${baseUrl}/api/auth/get-access-token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Cookie: request.headers.get('cookie') ?? '',
-      },
-      body: JSON.stringify({ providerId: 'github' }),
-    });
-
-    if (!tokenRes.ok)
-      return NextResponse.json({ ok: false }, { status: 401 });
-
-    const tokenData = (await tokenRes.json()) as { accessToken?: string };
-    const accessToken = tokenData?.accessToken;
-
-    if (!accessToken)
-      return NextResponse.json({ ok: false }, { status: 401 });
-
-    const sessionRes = await fetch(`${baseUrl}/api/auth/get-session`, {
-      method: 'GET',
-      headers: {
-        Cookie: request.headers.get('cookie') ?? '',
-      },
-    });
-
-    if (!sessionRes.ok)
-      return NextResponse.json({ ok: false }, { status: 401 });
-
-    const sessionData = (await sessionRes.json()) as { user?: { id?: string } };
-    const userId = sessionData?.user?.id;
-
-    if (!userId)
-      return NextResponse.json({ ok: false }, { status: 401 });
+    if (!accessToken || !userId) {
+      return NextResponse.json(
+        { ok: false, error: 'accessToken and userId required' },
+        { status: 400 }
+      );
+    }
 
     const githubUsernames = await fetchAllGitHubFollowing(accessToken);
-
     if (githubUsernames.length > 0) {
       await fetchMutation(api.follows.syncFromGitHubUsernames, {
         followerId: userId,
