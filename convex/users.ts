@@ -64,6 +64,17 @@ export const listGithubTokens = query({
   },
 });
 
+export const getTokenForUser = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const row = await ctx.db
+      .query('githubTokens')
+      .withIndex('by_user_id', (q) => q.eq('userId', args.userId))
+      .unique();
+    return row ? { accessToken: row.accessToken } : null;
+  },
+});
+
 export const getByUsername = query({
   args: { username: v.string() },
   handler: async (ctx, args) => {

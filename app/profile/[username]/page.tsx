@@ -1,14 +1,23 @@
 'use client';
 
-import { use, useState } from 'react';
-import { useQuery, useMutation } from 'convex/react';
+import { use, useState, useCallback } from 'react';
+import { useQuery, useMutation, useAction } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useAuth } from '@/hooks/use-auth';
 import { StoryBubble } from '@/components/story-bubble';
 import { StoryViewer } from '@/components/story-viewer';
-import { UserPlus, UserMinus, Star, Eye } from 'lucide-react';
+import {
+  UserPlus,
+  UserMinus,
+  Star,
+  Eye,
+  Github,
+  Plus,
+  Loader2,
+} from 'lucide-react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
+import { authClient } from '@/lib/auth-client';
 import type { HighlightStory, Story } from '@/lib/types';
 
 function HandDrawnCardBorder() {
@@ -51,11 +60,84 @@ export default function ProfilePage({
   const unfollow = useMutation(api.follows.unfollow);
   const setHighlight = useMutation(api.stories.setHighlight);
   const unsetHighlight = useMutation(api.stories.unsetHighlight);
+  const listReposForConnect = useAction(api.github.listReposForConnect);
+  const createWebhook = useAction(api.github.createWebhook);
 
   const profile = data?.user ?? null;
   const highlights = (data?.highlights ?? []) as unknown as HighlightStory[];
   const isFollowing = profile?.isFollowing ?? false;
   const isOwnProfile = currentUser?.id === profile?.id;
+
+  const connectedRepos = useQuery(
+    api.connectedRepos.listByUser,
+    isOwnProfile && currentUser?.id ? { userId: currentUser.id } : 'skip',
+  );
+
+  const [reposForConnect, setReposForConnect] = useState<
+    { fullName: string; name: string; owner: string }[] | null
+  >(null);
+  const [reposConnectedSet, setReposConnectedSet] = useState<Set<string>>(
+    new Set(),
+  );
+  const [loadingRepos, setLoadingRepos] = useState(false);
+  const [connectingRepo, setConnectingRepo] = useState<string | null>(null);
+  const [reposError, setReposError] = useState<string | null>(null);
+
+  const loadReposForConnect = useCallback(async () => {
+    if (!currentUser?.id) return;
+    setLoadingRepos(true);
+    setReposError(null);
+    try {
+      const result = await authClient.getAccessToken({ providerId: 'github' });
+      const accessToken =
+        result && 'data' in result && result.data
+          ? result.data.accessToken
+          : undefined;
+      if (!accessToken) {
+        setReposError('GitHub token not found. Try signing out and back in.');
+        setLoadingRepos(false);
+        return;
+      }
+      const data = await listReposForConnect({
+        accessToken,
+        userId: currentUser.id,
+      });
+      setReposForConnect(data.repos);
+      setReposConnectedSet(new Set(data.connected));
+    } catch (e) {
+      setReposError(e instanceof Error ? e.message : 'Failed to load repos');
+    } finally {
+      setLoadingRepos(false);
+    }
+  }, [currentUser?.id, listReposForConnect]);
+
+  const handleConnectRepo = async (owner: string, repo: string) => {
+    if (!currentUser?.id) return;
+    const fullName = `${owner}/${repo}`;
+    setConnectingRepo(fullName);
+    try {
+      const result = await authClient.getAccessToken({ providerId: 'github' });
+      const accessToken =
+        result && 'data' in result && result.data
+          ? result.data.accessToken
+          : undefined;
+      if (!accessToken) {
+        setReposError('GitHub token not found.');
+        return;
+      }
+      await createWebhook({
+        accessToken,
+        userId: currentUser.id,
+        owner,
+        repo,
+      });
+      setReposConnectedSet((prev) => new Set(prev).add(fullName));
+    } catch (e) {
+      setReposError(e instanceof Error ? e.message : 'Failed to connect repo');
+    } finally {
+      setConnectingRepo(null);
+    }
+  };
 
   const handleFollow = async () => {
     if (!profile) return;
@@ -187,6 +269,125 @@ export default function ProfilePage({
           </div>
         </motion.div>
 
+        {isOwnProfile && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className='relative p-6 mb-8 bg-white border-[3px] border-black rounded-2xl'
+            style={{ transform: 'rotate(-0.5deg)' }}
+          >
+            <HandDrawnCardBorder />
+            <div className='relative z-10'>
+              <div className='flex items-center gap-2 mb-4'>
+                <Github className='w-6 h-6' />
+                <h2 className='text-2xl text-black font-(--font-sketch)'>
+                  Repositories
+                </h2>
+              </div>
+              <p className='text-sm text-black/70 mb-4 font-(--font-sketch)'>
+                Connect repos to turn commits into stories automatically.
+              </p>
+              {connectedRepos && connectedRepos.length > 0 && (
+                <ul className='space-y-2 mb-4'>
+                  {connectedRepos.map((r) => (
+                    <li
+                      key={r.repositoryFullName}
+                      className='flex items-center justify-between p-3 bg-[#faf8f5] border-2 border-black rounded-lg font-(--font-sketch)'
+                    >
+                      <a
+                        href={`https://github.com/${r.repositoryFullName}`}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='text-black hover:underline'
+                      >
+                        {r.repositoryFullName}
+                      </a>
+                      <span className='text-xs text-black/60'>Connected</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {connectedRepos &&
+                connectedRepos.length === 0 &&
+                !reposForConnect && (
+                  <p className='text-sm text-black/60 mb-4 font-(--font-sketch)'>
+                    No repositories connected yet.
+                  </p>
+                )}
+              {reposError && (
+                <p className='text-sm text-red-600 mb-4 font-(--font-sketch)'>
+                  {reposError}
+                </p>
+              )}
+              {reposForConnect === null ? (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={loadReposForConnect}
+                  disabled={loadingRepos}
+                  className='flex items-center gap-2 px-4 py-2 border-2 border-black rounded-lg bg-white hover:bg-black hover:text-white transition-colors font-(--font-sketch) disabled:opacity-60'
+                >
+                  {loadingRepos ? (
+                    <Loader2 className='w-4 h-4 animate-spin' />
+                  ) : (
+                    <Plus className='w-4 h-4' />
+                  )}
+                  {loadingRepos ? 'Loading...' : 'Connect repository'}
+                </motion.button>
+              ) : (
+                <div className='space-y-2 max-h-60 overflow-y-auto'>
+                  {reposForConnect.filter(
+                    (r) => !reposConnectedSet.has(r.fullName),
+                  ).length === 0 ? (
+                    <p className='text-sm text-black/70 font-(--font-sketch) py-2'>
+                      All listed repos are already connected.
+                    </p>
+                  ) : (
+                    reposForConnect
+                      .filter((r) => !reposConnectedSet.has(r.fullName))
+                      .slice(0, 20)
+                      .map((r) => (
+                        <div
+                          key={r.fullName}
+                          className='flex items-center justify-between p-3 bg-[#faf8f5] border-2 border-black rounded-lg'
+                        >
+                          <span className='font-(--font-sketch) text-sm'>
+                            {r.fullName}
+                          </span>
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() =>
+                              handleConnectRepo(
+                                r.owner || r.fullName.split('/')[0],
+                                r.name,
+                              )
+                            }
+                            disabled={connectingRepo === r.fullName}
+                            className='px-3 py-1.5 border-2 border-black rounded-lg bg-black text-white text-sm font-(--font-sketch) hover:bg-white hover:text-black transition-colors disabled:opacity-60'
+                          >
+                            {connectingRepo === r.fullName ? (
+                              <Loader2 className='w-4 h-4 animate-spin inline' />
+                            ) : (
+                              'Connect'
+                            )}
+                          </motion.button>
+                        </div>
+                      ))
+                  )}
+                  {reposForConnect.filter(
+                    (r) => !reposConnectedSet.has(r.fullName),
+                  ).length > 20 && (
+                    <p className='text-xs text-black/60 font-(--font-sketch)'>
+                      Showing first 20. Connect one to add more.
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+
         {highlights.length > 0 && (
           <div>
             <div className='flex items-center justify-between mb-6'>
@@ -303,8 +504,8 @@ export default function ProfilePage({
                       ? Math.round(
                           highlights.reduce(
                             (sum, s) => sum + (s.viewCount ?? 0),
-                            0
-                          ) / highlights.length
+                            0,
+                          ) / highlights.length,
                         )
                       : 0}
                   </p>

@@ -9,6 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as connectedRepos from "../connectedRepos.js";
 import type * as constants from "../constants.js";
 import type * as crons from "../crons.js";
 import type * as cronsImpl from "../cronsImpl.js";
@@ -28,6 +29,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  connectedRepos: typeof connectedRepos;
   constants: typeof constants;
   crons: typeof crons;
   cronsImpl: typeof cronsImpl;

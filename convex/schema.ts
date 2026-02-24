@@ -69,6 +69,15 @@ const githubTokens = defineTable({
   updatedAt: v.number(),
 }).index('by_user_id', ['userId']);
 
+const connectedRepos = defineTable({
+  userId: v.string(),
+  repositoryFullName: v.string(),
+  hookId: v.number(),
+  createdAt: v.number(),
+})
+  .index('by_user_id', ['userId'])
+  .index('by_user_repo', ['userId', 'repositoryFullName']);
+
 export default defineSchema({
   users,
   commits,
@@ -77,4 +86,5 @@ export default defineSchema({
   follows,
   storyViews,
   githubTokens,
+  connectedRepos,
 });
