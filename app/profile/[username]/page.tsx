@@ -345,7 +345,7 @@ export default function ProfilePage({
                   ) : (
                     reposForConnect
                       .filter((r) => !reposConnectedSet.has(r.fullName))
-                      .slice(0, 20)
+                      .slice(0, 100)
                       .map((r) => (
                         <div
                           key={r.fullName}
@@ -379,7 +379,7 @@ export default function ProfilePage({
                     (r) => !reposConnectedSet.has(r.fullName),
                   ).length > 20 && (
                     <p className='text-xs text-black/60 font-(--font-sketch)'>
-                      Showing first 20. Connect one to add more.
+                      Showing first 100. Connect one to add more.
                     </p>
                   )}
                 </div>
