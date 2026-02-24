@@ -92,6 +92,64 @@ export const createWebhook = action({
   },
 });
 
+export const deleteWebhook = action({
+  args: {
+    accessToken: v.string(),
+    userId: v.string(),
+    repositoryFullName: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const connected = await ctx.runQuery(api.connectedRepos.listByUser, {
+      userId: args.userId,
+    });
+
+    const row = connected.find(
+      (r: { repositoryFullName: string }) =>
+        r.repositoryFullName === args.repositoryFullName,
+    );
+
+    if (!row || typeof (row as { hookId: number }).hookId !== 'number') {
+      await ctx.runMutation(api.connectedRepos.remove, {
+        userId: args.userId,
+        repositoryFullName: args.repositoryFullName,
+      });
+      return { ok: true };
+    }
+
+    const hookId = (row as { hookId: number }).hookId;
+    const parts = args.repositoryFullName.split('/');
+
+    const owner = parts[0] ?? '';
+    const repo = parts[1] ?? '';
+
+    if (owner && repo && hookId > 0) {
+      const res = await fetch(
+        `https://api.github.com/repos/${owner}/${repo}/hooks/${hookId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${args.accessToken}`,
+            Accept: 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+          },
+        },
+      );
+
+      if (!res.ok && res.status !== 404) {
+        const data = (await res.json()) as { message?: string };
+        throw new Error(data.message ?? `GitHub API error: ${res.status}`);
+      }
+    }
+
+    await ctx.runMutation(api.connectedRepos.remove, {
+      userId: args.userId,
+      repositoryFullName: args.repositoryFullName,
+    });
+
+    return { ok: true };
+  },
+});
+
 export const processPush = action({
   args: {
     pusherName: v.string(),

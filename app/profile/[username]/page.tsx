@@ -14,6 +14,7 @@ import {
   Github,
   Plus,
   Loader2,
+  Unplug,
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
@@ -62,6 +63,7 @@ export default function ProfilePage({
   const unsetHighlight = useMutation(api.stories.unsetHighlight);
   const listReposForConnect = useAction(api.github.listReposForConnect);
   const createWebhook = useAction(api.github.createWebhook);
+  const deleteWebhook = useAction(api.github.deleteWebhook);
 
   const profile = data?.user ?? null;
   const highlights = (data?.highlights ?? []) as unknown as HighlightStory[];
@@ -81,6 +83,9 @@ export default function ProfilePage({
   );
   const [loadingRepos, setLoadingRepos] = useState(false);
   const [connectingRepo, setConnectingRepo] = useState<string | null>(null);
+  const [disconnectingRepo, setDisconnectingRepo] = useState<string | null>(
+    null,
+  );
   const [reposError, setReposError] = useState<string | null>(null);
 
   const loadReposForConnect = useCallback(async () => {
@@ -136,6 +141,39 @@ export default function ProfilePage({
       setReposError(e instanceof Error ? e.message : 'Failed to connect repo');
     } finally {
       setConnectingRepo(null);
+    }
+  };
+
+  const handleDisconnectRepo = async (repositoryFullName: string) => {
+    if (!currentUser?.id) return;
+    setDisconnectingRepo(repositoryFullName);
+    setReposError(null);
+    try {
+      const result = await authClient.getAccessToken({ providerId: 'github' });
+      const accessToken =
+        result && 'data' in result && result.data
+          ? result.data.accessToken
+          : undefined;
+      if (!accessToken) {
+        setReposError('GitHub token not found.');
+        return;
+      }
+      await deleteWebhook({
+        accessToken,
+        userId: currentUser.id,
+        repositoryFullName,
+      });
+      setReposConnectedSet((prev) => {
+        const next = new Set(prev);
+        next.delete(repositoryFullName);
+        return next;
+      });
+    } catch (e) {
+      setReposError(
+        e instanceof Error ? e.message : 'Failed to disconnect repo',
+      );
+    } finally {
+      setDisconnectingRepo(null);
     }
   };
 
@@ -292,17 +330,39 @@ export default function ProfilePage({
                   {connectedRepos.map((r) => (
                     <li
                       key={r.repositoryFullName}
-                      className='flex items-center justify-between p-3 bg-[#faf8f5] border-2 border-black rounded-lg font-(--font-sketch)'
+                      className='flex items-center justify-between gap-2 p-3 bg-[#faf8f5] border-2 border-black rounded-lg font-(--font-sketch)'
                     >
                       <a
                         href={`https://github.com/${r.repositoryFullName}`}
                         target='_blank'
                         rel='noopener noreferrer'
-                        className='text-black hover:underline'
+                        className='text-black hover:underline truncate min-w-0'
                       >
                         {r.repositoryFullName}
                       </a>
-                      <span className='text-xs text-black/60'>Connected</span>
+                      <div className='flex items-center gap-2 shrink-0'>
+                        <span className='text-xs text-black/60 hidden sm:inline'>
+                          Connected
+                        </span>
+                        <motion.button
+                          type='button'
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() =>
+                            handleDisconnectRepo(r.repositoryFullName)
+                          }
+                          disabled={disconnectingRepo === r.repositoryFullName}
+                          className='flex items-center gap-1.5 px-2.5 py-1.5 border-2 border-black rounded-lg bg-white hover:bg-red-50 hover:border-red-400 text-black text-xs font-(--font-sketch) transition-colors disabled:opacity-60'
+                          title='Disconnect repo'
+                        >
+                          {disconnectingRepo === r.repositoryFullName ? (
+                            <Loader2 className='w-3.5 h-3.5 animate-spin' />
+                          ) : (
+                            <Unplug className='w-3.5 h-3.5' />
+                          )}
+                          <span className='hidden sm:inline'>Disconnect</span>
+                        </motion.button>
+                      </div>
                     </li>
                   ))}
                 </ul>
