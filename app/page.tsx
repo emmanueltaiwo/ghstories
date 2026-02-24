@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/hooks/use-auth';
 import { motion } from 'motion/react';
-import { ArrowRight, Github } from 'lucide-react';
+import { ArrowRight, Github, GitBranch, Zap, Eye } from 'lucide-react';
 import Link from 'next/link';
 
 function HandDrawnUnderline({ delay = 0 }: { delay?: number }) {
@@ -29,8 +29,29 @@ function HandDrawnUnderline({ delay = 0 }: { delay?: number }) {
 
 const FEATURE_ITEMS = ['24 hour expiry', 'Real-time updates', 'Free forever'];
 
+const HOW_IT_WORKS = [
+  {
+    step: 1,
+    title: 'Connect your repo',
+    desc: 'Sign in with GitHub and connect any repository from your profile. We add a webhook so new commits are sent to ghstories automatically.',
+    icon: GitBranch,
+  },
+  {
+    step: 2,
+    title: 'Push commits',
+    desc: 'Code as usual. Every push creates a new story. No extra tools or commands—just your normal workflow.',
+    icon: Zap,
+  },
+  {
+    step: 3,
+    title: 'Stories in your feed',
+    desc: 'Your commits show up as stories. Follow other developers to see their stories. Pin favorites to your profile highlights.',
+    icon: Eye,
+  },
+];
+
 export default function HomePage() {
-  const { signIn, isAuthenticated } = useAuth();
+  const { signIn, isAuthenticated, user } = useAuth();
 
   return (
     <div className='min-h-screen bg-[#faf8f5] text-black relative overflow-hidden'>
@@ -119,6 +140,88 @@ export default function HomePage() {
                 View Feed
               </Link>
             )}
+          </motion.div>
+        </div>
+      </section>
+
+      <section className='relative px-6 md:px-12 py-20 bg-[#faf8f5]'>
+        <div className='max-w-7xl mx-auto'>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className='text-4xl md:text-5xl font-(--font-sketch) mb-12'
+            style={{ transform: 'rotate(-0.5deg)' }}
+          >
+            How it works
+          </motion.h2>
+          <div className='grid md:grid-cols-3 gap-8'>
+            {HOW_IT_WORKS.map((item, i) => (
+              <motion.div
+                key={item.step}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className='relative p-6 bg-white border-[3px] border-black rounded-2xl'
+                style={{ transform: i % 2 === 0 ? 'rotate(-0.5deg)' : 'rotate(0.5deg)' }}
+              >
+                <div className='w-12 h-12 border-[3px] border-black rounded-xl flex items-center justify-center mb-4 bg-[#faf8f5]'>
+                  <item.icon className='w-6 h-6' />
+                </div>
+                <span className='text-sm text-black/60 font-(--font-sketch)'>
+                  Step {item.step}
+                </span>
+                <h3 className='text-xl font-(--font-sketch) mt-1 mb-3'>
+                  {item.title}
+                </h3>
+                <p className='text-black/70 text-sm font-(--font-sketch) leading-relaxed'>
+                  {item.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className='relative px-6 md:px-12 py-20 bg-[#faf8f5]'>
+        <div className='max-w-3xl mx-auto'>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className='p-8 md:p-10 bg-white border-[3px] border-black rounded-2xl text-center'
+            style={{ transform: 'rotate(0.5deg)' }}
+          >
+            <h2 className='text-3xl md:text-4xl font-(--font-sketch) mb-4'>
+              Connect a repository
+            </h2>
+            <p className='text-black/70 font-(--font-sketch) mb-6 max-w-xl mx-auto'>
+              After signing in, go to your profile and use the Repositories section to connect any GitHub repo. We set up the webhook for you—no copy-pasting URLs or digging through repo settings.
+            </p>
+            {!isAuthenticated && (
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => signIn()}
+                className='inline-flex items-center gap-2 px-6 py-3 border-[3px] border-black bg-black text-white rounded-xl font-(--font-sketch) hover:bg-white hover:text-black transition-colors'
+              >
+                Sign in with GitHub
+                <Github className='w-5 h-5' />
+              </motion.button>
+            )}
+            {isAuthenticated && (() => {
+              const username = (user as { username?: string })?.username;
+              return (
+                <Link
+                  href={username ? `/profile/${username}` : '/feed'}
+                  className='inline-flex items-center gap-2 px-6 py-3 border-[3px] border-black bg-white text-black rounded-xl font-(--font-sketch) hover:bg-black hover:text-white transition-colors'
+                >
+                  {username ? 'Connect a repo in your profile' : 'Go to feed'}
+                  <ArrowRight className='w-5 h-5' />
+                </Link>
+              );
+            })()}
           </motion.div>
         </div>
       </section>
