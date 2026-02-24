@@ -108,15 +108,18 @@ export const deleteWebhook = action({
         r.repositoryFullName === args.repositoryFullName,
     );
 
-    if (!row || typeof (row as { hookId: number }).hookId !== 'number') {
+    const hookId =
+      row && typeof (row as { hookId?: number }).hookId === 'number'
+        ? (row as { hookId: number }).hookId
+        : 0;
+
+    if (!row || hookId <= 0) {
       await ctx.runMutation(api.connectedRepos.remove, {
         userId: args.userId,
         repositoryFullName: args.repositoryFullName,
       });
       return { ok: true };
     }
-
-    const hookId = (row as { hookId: number }).hookId;
     const parts = args.repositoryFullName.split('/');
 
     const owner = parts[0] ?? '';
@@ -134,10 +137,18 @@ export const deleteWebhook = action({
           },
         },
       );
-
       if (!res.ok && res.status !== 404) {
-        const data = (await res.json()) as { message?: string };
-        throw new Error(data.message ?? `GitHub API error: ${res.status}`);
+        let message = `GitHub API error: ${res.status}`;
+        try {
+          const text = await res.text();
+          if (text) {
+            const data = JSON.parse(text) as { message?: string };
+            if (data?.message) message = data.message;
+          }
+        } catch {
+          // ignore
+        }
+        throw new Error(message);
       }
     }
 
