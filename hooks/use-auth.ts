@@ -68,7 +68,7 @@ export function useAuth() {
         provider: 'github',
         callbackURL:
           typeof window !== 'undefined'
-            ? `${window.location.origin}/feed`
+            ? `${process.env.NEXT_PUBLIC_APP_URL}/feed`
             : '/feed',
       }),
     signOut: async () => {
