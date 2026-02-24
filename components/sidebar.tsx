@@ -49,83 +49,81 @@ export function Sidebar({ variant = 'left' }: { variant?: SidebarVariant }) {
         `/profile/${(user as { username?: string }).username ?? user.id}`;
 
     return (
-      <nav className='lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#faf8f5] border-t-[3px] border-black pb-[env(safe-area-inset-bottom)]'>
-        <div className='flex justify-around items-center h-16 px-4 max-w-7xl mx-auto'>
+      <nav className='lg:hidden fixed bottom-0 left-0 right-0 z-50 pt-3 px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] bg-[#faf8f5]/95 backdrop-blur-md'>
+        <div
+          className='max-w-lg mx-auto flex justify-between items-stretch gap-1 p-2 bg-white border-[3px] border-black rounded-2xl shadow-[4px_4px_0_0_rgba(0,0,0,1)]'
+          style={{ transform: 'rotate(-0.5deg)' }}
+        >
           <Link
             href='/feed'
-            className='flex flex-col items-center justify-center gap-1 px-4 py-2'
+            className='flex-1 min-w-0 flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl transition-colors active:scale-[0.98]'
             style={{ fontFamily: 'var(--font-sketch)' }}
           >
             <motion.div
               whileTap={{ scale: 0.95 }}
-              className={`px-3 py-1.5 border-2 border-black rounded-lg transition-colors ${
+              className={`w-full flex flex-col items-center justify-center gap-1 py-2 rounded-lg border-2 border-black transition-colors ${
                 pathname === '/feed'
                   ? 'bg-black text-white'
-                  : 'bg-white text-black'
+                  : 'bg-[#faf8f5] text-black'
               }`}
               style={{
-                borderRadius: '8px 12px 8px 12px',
+                borderRadius: '10px 14px 10px 14px',
                 transform: pathname === '/feed' ? 'rotate(-0.5deg)' : 'rotate(0.5deg)',
               }}
             >
-              <div className='flex flex-col items-center gap-0.5'>
-                <Home className='w-5 h-5 shrink-0' />
-                <span className='text-xs'>Feed</span>
-              </div>
+              <Home className='w-5 h-5 shrink-0' />
+              <span className='text-xs font-(--font-sketch)'>Feed</span>
             </motion.div>
           </Link>
 
           <Link
             href={profileHref}
-            className='flex flex-col items-center justify-center gap-1 px-4 py-2'
+            className='flex-1 min-w-0 flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl transition-colors active:scale-[0.98]'
             style={{ fontFamily: 'var(--font-sketch)' }}
           >
             <motion.div
               whileTap={{ scale: 0.95 }}
-              className={`px-3 py-1.5 border-2 border-black rounded-lg transition-colors ${
-                isProfileActive ? 'bg-black text-white' : 'bg-white text-black'
+              className={`w-full flex flex-col items-center justify-center gap-1 py-2 rounded-lg border-2 border-black transition-colors ${
+                isProfileActive ? 'bg-black text-white' : 'bg-[#faf8f5] text-black'
               }`}
               style={{
-                borderRadius: '8px 12px 8px 12px',
+                borderRadius: '10px 14px 10px 14px',
                 transform: isProfileActive ? 'rotate(-0.5deg)' : 'rotate(0.5deg)',
               }}
             >
-              <div className='flex flex-col items-center gap-0.5'>
-                <div className='w-6 h-6 rounded-full overflow-hidden border-2 border-black shrink-0'>
-                  <Image
-                    src={
-                      ((user as { avatarUrl?: string }).avatarUrl ??
-                        (user as { image?: string }).image) ??
-                      ''
-                    }
-                    alt=''
-                    width={24}
-                    height={24}
-                    className='w-full h-full object-cover'
-                  />
-                </div>
-                <span className='text-xs'>Profile</span>
+              <div className='w-6 h-6 rounded-full overflow-hidden border-2 border-current shrink-0'>
+                <Image
+                  src={
+                    ((user as { avatarUrl?: string }).avatarUrl ??
+                      (user as { image?: string }).image) ??
+                    ''
+                  }
+                  alt=''
+                  width={24}
+                  height={24}
+                  className='w-full h-full object-cover'
+                />
               </div>
+              <span className='text-xs font-(--font-sketch)'>Profile</span>
             </motion.div>
           </Link>
 
           <button
+            type='button'
             onClick={() => signOut()}
-            className='flex flex-col items-center justify-center gap-1 px-4 py-2'
+            className='flex-1 min-w-0 flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl transition-colors active:scale-[0.98]'
             style={{ fontFamily: 'var(--font-sketch)' }}
           >
             <motion.div
               whileTap={{ scale: 0.95 }}
-              className='px-3 py-1.5 border-2 border-black bg-white rounded-lg hover:bg-black hover:text-white transition-colors'
+              className='w-full flex flex-col items-center justify-center gap-1 py-2 rounded-lg border-2 border-black bg-[#faf8f5] hover:bg-black hover:text-white transition-colors'
               style={{
-                borderRadius: '8px 12px 8px 12px',
+                borderRadius: '10px 14px 10px 14px',
                 transform: 'rotate(-0.5deg)',
               }}
             >
-              <div className='flex flex-col items-center gap-0.5'>
-                <LogOut className='w-5 h-5 shrink-0' />
-                <span className='text-xs'>Sign out</span>
-              </div>
+              <LogOut className='w-5 h-5 shrink-0' />
+              <span className='text-xs font-(--font-sketch)'>Sign out</span>
             </motion.div>
           </button>
         </div>
