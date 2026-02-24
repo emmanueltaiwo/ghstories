@@ -55,8 +55,8 @@ export default function HomePage() {
 
   return (
     <div className='min-h-screen bg-[#faf8f5] text-black relative overflow-hidden'>
-      <section className='relative min-h-screen flex items-center px-6 md:px-12 py-20'>
-        <div className='max-w-7xl mx-auto w-full space-y-12'>
+      <section className='relative min-h-screen flex items-center px-4 sm:px-6 md:px-12 py-12 sm:py-16 md:py-20'>
+        <div className='max-w-7xl mx-auto w-full space-y-8 md:space-y-12'>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -66,7 +66,7 @@ export default function HomePage() {
             <div className='text-sm text-black/70 uppercase tracking-wider font-(--font-sketch)'>
               GitHub commits → Stories
             </div>
-            <h1 className='text-6xl md:text-8xl leading-[0.85] font-(--font-sketch)'>
+            <h1 className='text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] font-(--font-sketch)'>
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -101,9 +101,9 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className='max-w-2xl space-y-6'
+            className='max-w-2xl space-y-4 md:space-y-6'
           >
-            <p className='text-xl md:text-2xl leading-relaxed text-black/90 font-(--font-sketch)'>
+            <p className='text-lg sm:text-xl md:text-2xl leading-relaxed text-black/90 font-(--font-sketch)'>
               Every GitHub commit becomes an ephemeral story. Share your coding
               journey with the developer community.
             </p>
@@ -117,14 +117,14 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1 }}
-            className='flex flex-col sm:flex-row gap-6'
+            className='flex flex-col sm:flex-row gap-4 sm:gap-6'
           >
             {!isAuthenticated && (
               <motion.button
                 whileHover={{ scale: 1.05, rotate: [0, -2, 2, 0] }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => signIn()}
-                className='px-10 py-4 border-[3px] border-black bg-black text-white text-lg hover:bg-white hover:text-black transition-all flex items-center gap-3 rounded-xl font-(--font-sketch)'
+                className='px-6 py-3 sm:px-10 sm:py-4 border-[3px] border-black bg-black text-white text-base sm:text-lg hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 sm:gap-3 rounded-xl font-(--font-sketch)'
                 style={{ transform: 'rotate(-1deg)' }}
               >
                 Get Started
@@ -134,7 +134,7 @@ export default function HomePage() {
             {isAuthenticated && (
               <Link
                 href='/feed'
-                className='px-10 py-4 border-[3px] border-black bg-white text-black text-lg hover:bg-black hover:text-white transition-all flex items-center gap-2 rounded-xl font-(--font-sketch)'
+                className='px-6 py-3 sm:px-10 sm:py-4 border-[3px] border-black bg-white text-black text-base sm:text-lg hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2 rounded-xl font-(--font-sketch)'
                 style={{ transform: 'rotate(1deg)' }}
               >
                 View Feed
@@ -144,18 +144,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className='relative px-6 md:px-12 py-20 bg-[#faf8f5]'>
+      <section className='relative px-4 sm:px-6 md:px-12 py-12 md:py-20 bg-[#faf8f5]'>
         <div className='max-w-7xl mx-auto'>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className='text-4xl md:text-5xl font-(--font-sketch) mb-12'
+            className='text-3xl sm:text-4xl md:text-5xl font-(--font-sketch) mb-8 md:mb-12'
             style={{ transform: 'rotate(-0.5deg)' }}
           >
             How it works
           </motion.h2>
-          <div className='grid md:grid-cols-3 gap-8'>
+          <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8'>
             {HOW_IT_WORKS.map((item, i) => (
               <motion.div
                 key={item.step}
@@ -163,7 +163,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className='relative p-6 bg-white border-[3px] border-black rounded-2xl'
+                className='relative p-4 sm:p-5 md:p-6 bg-white border-[3px] border-black rounded-2xl'
                 style={{ transform: i % 2 === 0 ? 'rotate(-0.5deg)' : 'rotate(0.5deg)' }}
               >
                 <div className='w-12 h-12 border-[3px] border-black rounded-xl flex items-center justify-center mb-4 bg-[#faf8f5]'>
@@ -184,19 +184,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className='relative px-6 md:px-12 py-20 bg-[#faf8f5]'>
+      <section className='relative px-4 sm:px-6 md:px-12 py-12 md:py-20 bg-[#faf8f5]'>
         <div className='max-w-3xl mx-auto'>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className='p-8 md:p-10 bg-white border-[3px] border-black rounded-2xl text-center'
+            className='p-5 sm:p-6 md:p-10 bg-white border-[3px] border-black rounded-2xl text-center'
             style={{ transform: 'rotate(0.5deg)' }}
           >
-            <h2 className='text-3xl md:text-4xl font-(--font-sketch) mb-4'>
+            <h2 className='text-2xl sm:text-3xl md:text-4xl font-(--font-sketch) mb-3 md:mb-4'>
               Connect a repository
             </h2>
-            <p className='text-black/70 font-(--font-sketch) mb-6 max-w-xl mx-auto'>
+            <p className='text-black/70 font-(--font-sketch) mb-4 md:mb-6 max-w-xl mx-auto text-sm sm:text-base'>
               After signing in, go to your profile and use the Repositories section to connect any GitHub repo. We set up the webhook for you—no copy-pasting URLs or digging through repo settings.
             </p>
             {!isAuthenticated && (
@@ -204,7 +204,7 @@ export default function HomePage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => signIn()}
-                className='inline-flex items-center gap-2 px-6 py-3 border-[3px] border-black bg-black text-white rounded-xl font-(--font-sketch) hover:bg-white hover:text-black transition-colors'
+                className='inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 border-[3px] border-black bg-black text-white rounded-xl font-(--font-sketch) hover:bg-white hover:text-black transition-colors text-sm sm:text-base'
               >
                 Sign in with GitHub
                 <Github className='w-5 h-5' />
@@ -215,7 +215,7 @@ export default function HomePage() {
               return (
                 <Link
                   href={username ? `/profile/${username}` : '/feed'}
-                  className='inline-flex items-center gap-2 px-6 py-3 border-[3px] border-black bg-white text-black rounded-xl font-(--font-sketch) hover:bg-black hover:text-white transition-colors'
+                  className='inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 border-[3px] border-black bg-white text-black rounded-xl font-(--font-sketch) hover:bg-black hover:text-white transition-colors text-sm sm:text-base'
                 >
                   {username ? 'Connect a repo in your profile' : 'Go to feed'}
                   <ArrowRight className='w-5 h-5' />
@@ -226,8 +226,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className='border-t-[3px] border-black px-6 md:px-12 py-8 bg-[#faf8f5]'>
-        <div className='max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-black/70 font-(--font-sketch)'>
+      <footer className='border-t-[3px] border-black px-4 sm:px-6 md:px-12 py-6 md:py-8 bg-[#faf8f5]'>
+        <div className='max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-sm text-black/70 font-(--font-sketch)'>
           <div className='flex items-center gap-3'>
             <div
               className='w-8 h-8 border-[3px] border-black rounded-lg flex items-center justify-center bg-white'

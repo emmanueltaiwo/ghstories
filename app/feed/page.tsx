@@ -121,8 +121,8 @@ export default function FeedPage() {
 
   if (!user && !isLoadingUser) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-[#faf8f5]'>
-        <p className='text-black/70 font-(--font-sketch)'>
+      <div className='min-h-screen flex items-center justify-center bg-[#faf8f5] px-4'>
+        <p className='text-black/70 font-(--font-sketch) text-sm sm:text-base text-center'>
           Sign in to see your feed.
         </p>
       </div>
@@ -131,15 +131,15 @@ export default function FeedPage() {
 
   if (isStoriesLoading) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-[#faf8f5]'>
+      <div className='min-h-screen flex items-center justify-center bg-[#faf8f5] px-4'>
         <div className='flex flex-col items-center gap-4'>
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            className='w-12 h-12 border-[3px] border-black border-t-transparent rounded-full'
+            className='w-10 h-10 sm:w-12 sm:h-12 border-2 sm:border-[3px] border-black border-t-transparent rounded-full'
           />
 
-          <p className='text-black/70 text-sm font-(--font-sketch)'>
+          <p className='text-black/70 text-xs sm:text-sm font-(--font-sketch)'>
             Loading stories...
           </p>
         </div>
@@ -149,13 +149,13 @@ export default function FeedPage() {
 
   if (allStories.length === 0) {
     return (
-      <div className='min-h-screen flex items-center justify-center p-8 bg-[#faf8f5]'>
-        <div className='text-center space-y-4 max-w-md'>
-          <h2 className='text-3xl text-black font-(--font-sketch)'>
+      <div className='min-h-screen flex items-center justify-center p-4 sm:p-8 bg-[#faf8f5]'>
+        <div className='text-center space-y-3 sm:space-y-4 max-w-md'>
+          <h2 className='text-2xl sm:text-3xl text-black font-(--font-sketch)'>
             No stories yet
           </h2>
 
-          <p className='text-black/70 font-(--font-sketch)'>
+          <p className='text-black/70 font-(--font-sketch) text-sm sm:text-base'>
             {myStories.length === 0
               ? 'Connect a repo in your profile to create stories from commits, or follow other developers to see their stories.'
               : 'Follow other developers to see their commit stories here.'}
@@ -167,29 +167,29 @@ export default function FeedPage() {
 
   return (
     <div className='min-h-screen bg-[#faf8f5]'>
-      <div className='max-w-4xl mx-auto px-6 py-6'>
+      <div className='max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className='mb-6'
+          className='mb-4 sm:mb-6'
         >
           <h1
-            className='text-5xl md:text-6xl text-black mb-2 font-(--font-sketch)'
+            className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-black mb-1 sm:mb-2 font-(--font-sketch)'
             style={{ transform: 'rotate(-1deg)' }}
           >
             Stories
           </h1>
 
           <p
-            className='text-black/70 text-sm font-(--font-sketch)'
+            className='text-black/70 text-xs sm:text-sm font-(--font-sketch)'
             style={{ transform: 'rotate(0.5deg)' }}
           >
             See what developers are building
           </p>
         </motion.div>
 
-        <div className='mb-6 pt-4 pb-2'>
-          <div className='flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2 overflow-y-visible'>
+        <div className='mb-4 sm:mb-6 pt-2 sm:pt-4 pb-2'>
+          <div className='flex gap-2 sm:gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2 overflow-y-visible'>
             {Object.entries(storiesByUser).map(([userId, list]) => {
               const sorted = [...list].sort(
                 (a, b) => a.createdAt - b.createdAt
@@ -211,7 +211,7 @@ export default function FeedPage() {
           </div>
         </div>
 
-        <div className='space-y-4'>
+        <div className='space-y-3 sm:space-y-4'>
           {Object.entries(storiesByUser).map(([userId, userStoryList], i) => {
             const firstStory = userStoryList[0];
             const user = firstStory.user;
@@ -227,17 +227,17 @@ export default function FeedPage() {
                 transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -5, rotate: rotation + 1, scale: 1.02 }}
                 onClick={() => handleStoryClick(userId)}
-                className='group relative p-6 bg-white border-[3px] border-black cursor-pointer transition-all rounded-2xl'
+                className='group relative p-4 sm:p-6 bg-white border-[3px] border-black cursor-pointer transition-all rounded-2xl'
               >
                 <HandDrawnCardBorder />
 
-                <div className='relative z-10 flex items-start gap-4'>
+                <div className='relative z-10 flex items-start gap-3 sm:gap-4'>
                   <div className='relative shrink-0'>
                     <motion.img
                       whileHover={{ rotate: [0, -5, 5, 0] }}
                       src={user?.avatarUrl ?? undefined}
                       alt={user?.username ?? undefined}
-                      className='w-14 h-14 rounded-full border-2 border-black'
+                      className='w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-black'
                     />
 
                     {userStoryList.some((s) => s.viewCount === 0) && (
@@ -250,8 +250,8 @@ export default function FeedPage() {
                   </div>
 
                   <div className='flex-1 min-w-0'>
-                    <div className='flex items-center gap-2 mb-2'>
-                      <h3 className='text-black text-base font-(--font-sketch)'>
+                    <div className='flex items-center gap-2 mb-1 sm:mb-2'>
+                      <h3 className='text-black text-sm sm:text-base font-(--font-sketch) truncate'>
                         {user?.username}
                       </h3>
                       <span className='text-black/50'>·</span>

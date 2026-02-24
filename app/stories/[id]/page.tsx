@@ -48,21 +48,21 @@ export default function StoryPage({
 
   if (story === undefined) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-black'>
-        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-white' />
+      <div className='min-h-screen flex items-center justify-center bg-black p-4'>
+        <div className='animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-2 border-white border-t-transparent' />
       </div>
     );
   }
 
   if (!story) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-black text-white'>
-        <div className='text-center'>
-          <h2 className='text-2xl font-bold mb-4'>Story not found</h2>
+      <div className='min-h-screen flex items-center justify-center bg-black text-white p-4'>
+        <div className='text-center max-w-sm'>
+          <h2 className='text-xl sm:text-2xl font-bold mb-4 font-(--font-sketch)'>Story not found</h2>
 
           <button
             onClick={() => router.push('/feed')}
-            className='px-4 py-2 rounded-lg bg-white text-black hover:bg-gray-200'
+            className='px-4 py-2.5 rounded-xl border-2 border-white bg-white text-black hover:bg-black hover:text-white transition-colors font-(--font-sketch) text-sm'
           >
             Go to Feed
           </button>

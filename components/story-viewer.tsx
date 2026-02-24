@@ -7,6 +7,7 @@ import { useQuery, useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import type { Id } from '@/convex/_generated/dataModel';
 import { StoryViewersModal } from './story-viewers-modal';
+import { useStoryViewerOpen } from '@/lib/story-viewer-context';
 import type { StoryViewerStory, Reaction } from '@/lib/types';
 
 const THEME_GRADIENTS: Record<string, string> = {
@@ -46,8 +47,14 @@ export function StoryViewer({
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [showViewersModal, setShowViewersModal] = useState(false);
+  const { setStoryViewerOpen } = useStoryViewerOpen();
 
   const storyId = story.id as Id<'stories'>;
+
+  useEffect(() => {
+    setStoryViewerOpen(true);
+    return () => setStoryViewerOpen(false);
+  }, [setStoryViewerOpen]);
   const isOwnStory = currentUserId && story.userId === currentUserId;
 
   const reactions =
@@ -137,7 +144,7 @@ export function StoryViewer({
       : new Date(story.createdAt).getTime();
 
   return (
-    <div className='fixed inset-0 z-50 bg-black'>
+    <div className='fixed inset-0 z-[100] bg-black'>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -145,7 +152,7 @@ export function StoryViewer({
         className='relative h-full w-full'
       >
         {allStories.length > 0 ? (
-          <div className='absolute top-4 left-4 right-4 z-10 flex gap-1'>
+          <div className='absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4 z-10 flex gap-1'>
             {allStories.map((s, index) => {
               const isCurrent = index === currentIndex;
               const isViewed =
@@ -180,7 +187,7 @@ export function StoryViewer({
           whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
           whileTap={{ scale: 0.9 }}
           onClick={onClose}
-          className='absolute top-6 right-6 z-20 p-3 border-[3px] border-white/30 bg-black/60 hover:bg-black/80 backdrop-blur-sm transition-all hover:border-white/50 rounded-xl'
+          className='absolute top-4 right-4 sm:top-6 sm:right-6 z-20 p-2 sm:p-3 border-2 sm:border-[3px] border-white/30 bg-black/60 hover:bg-black/80 backdrop-blur-sm transition-all hover:border-white/50 rounded-lg sm:rounded-xl'
           style={{ transform: 'rotate(-2deg)' }}
         >
           <X className='w-5 h-5 text-white' />
@@ -191,7 +198,7 @@ export function StoryViewer({
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={onPrevious}
-            className='absolute left-6 top-1/2 -translate-y-1/2 z-20 p-3 border-[3px] border-white/30 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-xl'
+            className='absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-3 border-2 sm:border-[3px] border-white/30 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-lg sm:rounded-xl'
             style={{ transform: 'rotate(-2deg)' }}
           >
             <svg
@@ -215,7 +222,7 @@ export function StoryViewer({
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={onNext}
-            className='absolute right-6 top-1/2 -translate-y-1/2 z-20 p-3 border-[3px] border-white/30 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-xl'
+            className='absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-3 border-2 sm:border-[3px] border-white/30 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-lg sm:rounded-xl'
             style={{ transform: 'rotate(2deg)' }}
           >
             <svg
@@ -242,23 +249,23 @@ export function StoryViewer({
           onClick={handleClick}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
-          className={`h-full w-full bg-linear-to-br ${gradient} flex items-center justify-center p-8 relative overflow-hidden cursor-pointer`}
+          className={`h-full w-full bg-linear-to-br ${gradient} flex items-center justify-center p-4 sm:p-6 md:p-8 relative overflow-hidden cursor-pointer`}
         >
           <div className='absolute inset-0 opacity-10'>
-            <div className='absolute top-1/4 left-1/4 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse' />
+            <div className='absolute top-1/4 left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-white rounded-full blur-3xl animate-pulse' />
             <div
-              className='absolute bottom-1/4 right-1/4 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse'
+              className='absolute bottom-1/4 right-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-white rounded-full blur-3xl animate-pulse'
               style={{ animationDelay: '1s' }}
             />
           </div>
-          <div className='max-w-2xl w-full text-center space-y-8 relative z-10'>
+          <div className='max-w-2xl w-full text-center space-y-4 sm:space-y-6 md:space-y-8 relative z-10'>
             {commit && (
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className='inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/30 backdrop-blur-sm border border-white/20'
+                className='inline-flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-black/30 backdrop-blur-sm border border-white/20'
               >
-                <span className='text-white/90 text-xs font-mono font-medium'>
+                <span className='text-white/90 text-[10px] sm:text-xs font-mono font-medium truncate max-w-[200px] sm:max-w-none'>
                   {commit.repositoryName}
                 </span>
               </motion.div>
@@ -266,7 +273,7 @@ export function StoryViewer({
             <motion.h1
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className='text-5xl md:text-7xl font-bold text-white drop-shadow-2xl leading-tight'
+              className='text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white drop-shadow-2xl leading-tight px-2'
             >
               {commit?.message?.split('\n')[0] ?? 'Commit Story'}
             </motion.h1>
@@ -275,7 +282,7 @@ export function StoryViewer({
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className='text-xl md:text-2xl text-white/95 drop-shadow-lg leading-relaxed max-w-xl mx-auto whitespace-pre-line'
+                className='text-base sm:text-xl md:text-2xl text-white/95 drop-shadow-lg leading-relaxed max-w-xl mx-auto whitespace-pre-line'
               >
                 {commit.message.split('\n').slice(1).join('\n').trim()}
               </motion.p>
@@ -285,7 +292,7 @@ export function StoryViewer({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className='text-white/80 text-sm font-medium'
+              className='text-white/80 text-xs sm:text-sm font-medium'
             >
               {new Date(createdAtMs).toLocaleDateString('en-US', {
                 month: 'short',
@@ -296,7 +303,7 @@ export function StoryViewer({
           </div>
         </motion.div>
 
-        <div className='absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3'>
+        <div className='absolute bottom-4 left-2 right-2 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:bottom-8 z-20 flex justify-center gap-2 sm:gap-3 flex-wrap'>
           {['❤️', '🔥', '🚀', '✨'].map((emoji) => {
             const r = reactions.find((x) => x.emoji === emoji);
             const active = r?.hasReacted ?? false;
@@ -317,7 +324,7 @@ export function StoryViewer({
                   e.stopPropagation();
                   handleReaction(emoji);
                 }}
-                className={`p-3.5 rounded-xl transition-all backdrop-blur-sm border text-xl ${active ? `${activeClass} text-white` : 'bg-white/10 text-white hover:bg-white/20 border-white/20'}`}
+                className={`p-2.5 sm:p-3.5 rounded-lg sm:rounded-xl transition-all backdrop-blur-sm border text-base sm:text-xl ${active ? `${activeClass} text-white` : 'bg-white/10 text-white hover:bg-white/20 border-white/20'}`}
               >
                 {emoji === '❤️' ? (
                   <Heart
@@ -337,7 +344,7 @@ export function StoryViewer({
                 e.stopPropagation();
                 handleHighlight();
               }}
-              className={`p-3.5 rounded-xl transition-all backdrop-blur-sm border ${
+              className={`p-2.5 sm:p-3.5 rounded-lg sm:rounded-xl transition-all backdrop-blur-sm border ${
                 story.isHighlight
                   ? 'bg-yellow-500 text-white border-yellow-400'
                   : 'bg-white/10 text-white hover:bg-white/20 border-white/20'
@@ -354,7 +361,7 @@ export function StoryViewer({
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className='absolute bottom-28 left-1/2 -translate-x-1/2 z-20 flex gap-2'
+            className='absolute bottom-20 sm:bottom-28 left-1/2 -translate-x-1/2 z-20 flex gap-2 flex-wrap justify-center max-w-[calc(100%-2rem)]'
           >
             {reactions.map((reaction) => (
               <div
@@ -375,7 +382,7 @@ export function StoryViewer({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowViewersModal(true)}
-            className='absolute top-20 right-4 z-20 px-3 py-1.5 rounded-lg bg-black/60 backdrop-blur-sm text-white text-sm flex items-center gap-2 border border-white/10 hover:bg-black/80'
+            className='absolute top-14 sm:top-20 right-2 sm:right-4 z-20 px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-black/60 backdrop-blur-sm text-white text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 border border-white/10 hover:bg-black/80'
           >
             <Eye className='w-4 h-4' />
             <span className='font-medium'>{story.viewCount ?? 0}</span>

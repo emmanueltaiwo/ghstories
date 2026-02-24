@@ -38,19 +38,19 @@ export function StoryViewersModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className='fixed inset-0 bg-black/50 z-50'
+            className='fixed inset-0 bg-black/50 z-[110]'
           />
 
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className='fixed inset-x-4 top-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl z-50 max-h-[80vh] flex flex-col max-w-md mx-auto'
+            className='fixed inset-x-4 top-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl z-[110] max-h-[80vh] flex flex-col max-w-md mx-auto'
           >
-            <div className='flex items-center justify-between p-4 border-b'>
+            <div className='flex items-center justify-between p-3 sm:p-4 border-b'>
               <div className='flex items-center gap-2'>
-                <Eye className='w-5 h-5 text-gray-600' />
-                <h2 className='text-lg font-semibold'>Story Viewers</h2>
+                <Eye className='w-5 h-5 text-gray-600 shrink-0' />
+                <h2 className='text-base sm:text-lg font-semibold truncate'>Story Viewers</h2>
               </div>
               <button
                 onClick={onClose}
@@ -60,21 +60,21 @@ export function StoryViewersModal({
               </button>
             </div>
 
-            <div className='p-4 border-b bg-gray-50'>
-              <p className='text-sm text-gray-600'>
+            <div className='p-3 sm:p-4 border-b bg-gray-50'>
+              <p className='text-xs sm:text-sm text-gray-600'>
                 <span className='font-semibold'>{totalViews}</span> total view
                 {totalViews !== 1 ? 's' : ''}
               </p>
             </div>
 
-            <div className='flex-1 overflow-y-auto'>
+            <div className='flex-1 overflow-y-auto min-h-0'>
               {isLoading ? (
-                <div className='flex justify-center py-12'>
+                <div className='flex justify-center py-8 sm:py-12'>
                   <div className='w-8 h-8 border-2 border-gray-300 border-t-black rounded-full animate-spin' />
                 </div>
               ) : viewers.length === 0 ? (
-                <div className='flex flex-col items-center justify-center py-12 px-4'>
-                  <Eye className='w-12 h-12 text-gray-300 mb-2' />
+                <div className='flex flex-col items-center justify-center py-8 sm:py-12 px-4'>
+                  <Eye className='w-10 h-10 sm:w-12 sm:h-12 text-gray-300 mb-2' />
                   <p className='text-gray-500 text-sm'>No viewers yet</p>
                 </div>
               ) : (
@@ -82,7 +82,7 @@ export function StoryViewersModal({
                   {viewers.map((viewer) => (
                     <div
                       key={viewer.id}
-                      className='flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors'
+                      className='flex items-center gap-3 p-3 sm:p-4 hover:bg-gray-50 transition-colors'
                     >
                       <div className='relative w-10 h-10 rounded-full overflow-hidden bg-gray-200 shrink-0'>
                         {viewer.avatarUrl ? (

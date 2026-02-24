@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
+import { useStoryViewerOpen } from '@/lib/story-viewer-context';
 import { Github, Home, LogOut } from 'lucide-react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
@@ -34,8 +35,10 @@ type SidebarVariant = 'left' | 'bottom';
 export function Sidebar({ variant = 'left' }: { variant?: SidebarVariant }) {
   const pathname = usePathname();
   const { user, isAuthenticated, signOut } = useAuth();
+  const { isStoryViewerOpen } = useStoryViewerOpen();
 
   if (!isAuthenticated || pathname === '/') return null;
+  if (variant === 'bottom' && isStoryViewerOpen) return null;
 
   const navItems = [{ href: '/feed', icon: Home, label: 'Feed' }];
 

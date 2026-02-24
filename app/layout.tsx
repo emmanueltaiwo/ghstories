@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Cabin_Sketch } from 'next/font/google';
 import './globals.css';
 import { ConvexClientProvider } from './ConvexClientProvider';
 import { Providers } from '@/lib/providers';
+import { StoryViewerOpenProvider } from '@/lib/story-viewer-context';
 import { Sidebar } from '@/components/sidebar';
 import { Navbar } from '@/components/navbar';
 import { SketchyGrid } from '@/components/sketchy-grid';
@@ -45,16 +46,18 @@ export default async function RootLayout({
 
         <ConvexClientProvider initialToken={token}>
           <Providers>
-            <div className='flex min-h-screen relative z-10 w-full'>
-              <div className='flex w-full max-w-7xl mx-auto'>
-                <Sidebar />
-                <div className='flex-1 flex flex-col min-w-0'>
-                  <Navbar />
-                  <main className='flex-1 pb-20 lg:pb-0'>{children}</main>
+            <StoryViewerOpenProvider>
+              <div className='flex min-h-screen relative z-10 w-full'>
+                <div className='flex w-full max-w-7xl mx-auto'>
+                  <Sidebar />
+                  <div className='flex-1 flex flex-col min-w-0'>
+                    <Navbar />
+                    <main className='flex-1 pb-20 lg:pb-0'>{children}</main>
+                  </div>
                 </div>
+                <Sidebar variant='bottom' />
               </div>
-              <Sidebar variant='bottom' />
-            </div>
+            </StoryViewerOpenProvider>
           </Providers>
         </ConvexClientProvider>
       </body>

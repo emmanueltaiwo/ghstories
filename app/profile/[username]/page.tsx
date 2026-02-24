@@ -178,15 +178,15 @@ export default function ProfilePage({
 
   if (data === undefined) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-[#fefefe]'>
+      <div className='min-h-screen flex items-center justify-center bg-[#fefefe] px-4'>
         <div className='flex flex-col items-center gap-4'>
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            className='w-12 h-12 border-[3px] border-black border-t-transparent rounded-full'
+            className='w-10 h-10 sm:w-12 sm:h-12 border-2 sm:border-[3px] border-black border-t-transparent rounded-full'
           />
 
-          <p className='text-black/70 text-sm font-(--font-sketch)'>
+          <p className='text-black/70 text-xs sm:text-sm font-(--font-sketch)'>
             Loading profile...
           </p>
         </div>
@@ -196,13 +196,13 @@ export default function ProfilePage({
 
   if (!profile) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-[#fefefe]'>
-        <div className='text-center space-y-4'>
-          <h2 className='text-3xl text-black font-(--font-sketch)'>
+      <div className='min-h-screen flex items-center justify-center bg-[#fefefe] px-4'>
+        <div className='text-center space-y-3 sm:space-y-4'>
+          <h2 className='text-2xl sm:text-3xl text-black font-(--font-sketch)'>
             User not found
           </h2>
 
-          <p className='text-black/70 font-(--font-sketch)'>
+          <p className='text-black/70 font-(--font-sketch) text-sm sm:text-base'>
             This user doesn&apos;t exist or has been removed.
           </p>
         </div>
@@ -214,32 +214,32 @@ export default function ProfilePage({
 
   return (
     <div className='min-h-screen bg-[#faf8f5]'>
-      <div className='max-w-4xl mx-auto px-6 py-8'>
+      <div className='max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className='relative p-8 mb-8 bg-white border-[3px] border-black rounded-2xl'
+          className='relative p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 bg-white border-[3px] border-black rounded-2xl'
           style={{ transform: 'rotate(-0.5deg)' }}
         >
           <HandDrawnCardBorder />
 
-          <div className='relative z-10 flex items-start gap-6'>
-            <div className='relative'>
+          <div className='relative z-10 flex items-start gap-4 sm:gap-6'>
+            <div className='relative shrink-0'>
               <Image
                 src={profile.avatarUrl ?? ''}
                 alt={profile.username ?? ''}
-                className='w-24 h-24 rounded-2xl border-[3px] border-black'
+                className='w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl sm:rounded-2xl border-[3px] border-black'
                 width={96}
                 height={96}
               />
             </div>
 
-            <div className='flex-1'>
-              <h1 className='text-4xl text-black mb-1 font-(--font-sketch)'>
+            <div className='flex-1 min-w-0'>
+              <h1 className='text-2xl sm:text-3xl md:text-4xl text-black mb-1 font-(--font-sketch) truncate'>
                 {profile.displayName ?? profile.username}
               </h1>
 
-              <p className='text-black/70 mb-6 text-sm font-(--font-sketch)'>
+              <p className='text-black/70 mb-4 sm:mb-6 text-xs sm:text-sm font-(--font-sketch)'>
                 @{profile.username}
               </p>
 
@@ -248,7 +248,7 @@ export default function ProfilePage({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleFollow}
-                  className={`flex items-center gap-2 px-6 py-3 border-[3px] border-black text-lg transition-all rounded-xl font-(--font-sketch) ${
+                  className={`flex items-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 border-[3px] border-black text-base sm:text-lg transition-all rounded-xl font-(--font-sketch) ${
                     isFollowing
                       ? 'bg-black text-white hover:bg-white hover:text-black'
                       : 'bg-white text-black hover:bg-black hover:text-white'
@@ -273,18 +273,18 @@ export default function ProfilePage({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className='relative p-6 mb-8 bg-white border-[3px] border-black rounded-2xl'
+            className='relative p-4 sm:p-6 mb-6 sm:mb-8 bg-white border-[3px] border-black rounded-2xl'
             style={{ transform: 'rotate(-0.5deg)' }}
           >
             <HandDrawnCardBorder />
             <div className='relative z-10'>
-              <div className='flex items-center gap-2 mb-4'>
-                <Github className='w-6 h-6' />
-                <h2 className='text-2xl text-black font-(--font-sketch)'>
+              <div className='flex items-center gap-2 mb-3 sm:mb-4'>
+                <Github className='w-5 h-5 sm:w-6 sm:h-6' />
+                <h2 className='text-xl sm:text-2xl text-black font-(--font-sketch)'>
                   Repositories
                 </h2>
               </div>
-              <p className='text-sm text-black/70 mb-4 font-(--font-sketch)'>
+              <p className='text-xs sm:text-sm text-black/70 mb-3 sm:mb-4 font-(--font-sketch)'>
                 Connect repos to turn commits into stories automatically.
               </p>
               {connectedRepos && connectedRepos.length > 0 && (
@@ -390,24 +390,24 @@ export default function ProfilePage({
 
         {highlights.length > 0 && (
           <div>
-            <div className='flex items-center justify-between mb-6'>
+            <div className='flex items-center justify-between mb-4 sm:mb-6'>
               <h2
-                className='text-4xl text-black font-(--font-sketch)'
+                className='text-2xl sm:text-3xl md:text-4xl text-black font-(--font-sketch)'
                 style={{ transform: 'rotate(-1deg)' }}
               >
                 Highlights
               </h2>
 
-              <span className='text-sm text-black/60 font-(--font-sketch)'>
+              <span className='text-xs sm:text-sm text-black/60 font-(--font-sketch)'>
                 {highlights.length} saved
               </span>
             </div>
 
-            <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4'>
               {highlights.map((story) => (
                 <div
                   key={story.id}
-                  className='group relative p-6 bg-white border-[3px] border-black cursor-pointer aspect-square flex flex-col items-center justify-center gap-3 transition-all hover:scale-105 rounded-2xl'
+                  className='group relative p-3 sm:p-4 md:p-6 bg-white border-[3px] border-black cursor-pointer aspect-square flex flex-col items-center justify-center gap-2 sm:gap-3 transition-all hover:scale-105 rounded-2xl'
                 >
                   <HandDrawnCardBorder />
 
@@ -451,27 +451,27 @@ export default function ProfilePage({
         )}
 
         {highlights.length === 0 && isOwnProfile && (
-          <div className='text-center py-16'>
-            <p className='text-black/70 mb-1 font-(--font-sketch)'>
+          <div className='text-center py-10 sm:py-16 px-4'>
+            <p className='text-black/70 mb-1 font-(--font-sketch) text-sm sm:text-base'>
               No highlights yet
             </p>
 
-            <p className='text-sm text-black/60 font-(--font-sketch)'>
+            <p className='text-xs sm:text-sm text-black/60 font-(--font-sketch)'>
               Pin your favorite stories to save them permanently
             </p>
           </div>
         )}
 
         {isOwnProfile && highlights.length > 0 && (
-          <div className='mt-8 relative p-6 bg-white border-[3px] border-black rounded-2xl'>
+          <div className='mt-6 sm:mt-8 relative p-4 sm:p-6 bg-white border-[3px] border-black rounded-2xl'>
             <HandDrawnCardBorder />
 
             <div className='relative z-10'>
-              <h2 className='text-2xl text-black mb-4 font-(--font-sketch)'>
+              <h2 className='text-xl sm:text-2xl text-black mb-3 sm:mb-4 font-(--font-sketch)'>
                 Insights
               </h2>
 
-              <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+              <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4'>
                 <div className='p-4 bg-[#faf8f5] border-2 border-black rounded-lg'>
                   <div className='flex items-center gap-2 mb-1'>
                     <Eye className='w-5 h-5' />
