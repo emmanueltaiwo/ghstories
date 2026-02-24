@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
@@ -8,7 +8,6 @@ import type { Story, StoryViewerStory } from '@/lib/types';
 import { StoryBubble } from '@/components/story-bubble';
 import { StoryViewer } from '@/components/story-viewer';
 import { useAuth } from '@/hooks/use-auth';
-import { WebhookSetupModal } from '@/components/webhook-setup-modal';
 
 function HandDrawnCardBorder() {
   return (
@@ -35,8 +34,6 @@ function HandDrawnCardBorder() {
 export default function FeedPage() {
   const { user, isLoading: isLoadingUser } = useAuth();
   const [selectedStoryId, setSelectedStoryId] = useState<string | null>(null);
-  const [showWebhookModal, setShowWebhookModal] = useState(false);
-  const hasShownModalRef = useRef(false);
 
   const feedStoriesQuery = useQuery(
     api.stories.listFeed,
@@ -65,20 +62,6 @@ export default function FeedPage() {
     isLoadingUser ||
     (!!user?.id &&
       (feedStoriesQuery === undefined || myStoriesQuery === undefined));
-
-  useEffect(() => {
-    if (!user || hasShownModalRef.current) return;
-
-    const hasSeen =
-      typeof window !== 'undefined' &&
-      localStorage.getItem('webhook-setup-seen') === 'true';
-
-    if (!hasSeen && myStories.length === 0) {
-      hasShownModalRef.current = true;
-      const t = setTimeout(() => setShowWebhookModal(true), 500);
-      return () => clearTimeout(t);
-    }
-  }, [user, myStories.length]);
 
   const selectedStory = allStories.find((s) => s.id === selectedStoryId);
   const selectedUserId = selectedStory?.userId;
@@ -160,11 +143,6 @@ export default function FeedPage() {
             Loading stories...
           </p>
         </div>
-
-        <WebhookSetupModal
-          isOpen={showWebhookModal}
-          onClose={() => setShowWebhookModal(false)}
-        />
       </div>
     );
   }
@@ -179,15 +157,10 @@ export default function FeedPage() {
 
           <p className='text-black/70 font-(--font-sketch)'>
             {myStories.length === 0
-              ? 'Set up a webhook to start creating stories from your commits, or follow other developers to see their stories.'
+              ? 'Connect a repo in your profile to create stories from commits, or follow other developers to see their stories.'
               : 'Follow other developers to see their commit stories here.'}
           </p>
         </div>
-
-        <WebhookSetupModal
-          isOpen={showWebhookModal}
-          onClose={() => setShowWebhookModal(false)}
-        />
       </div>
     );
   }
@@ -343,11 +316,6 @@ export default function FeedPage() {
           currentUserId={user?.id ?? null}
         />
       )}
-
-      <WebhookSetupModal
-        isOpen={showWebhookModal}
-        onClose={() => setShowWebhookModal(false)}
-      />
     </div>
   );
 }
