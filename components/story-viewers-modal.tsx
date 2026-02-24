@@ -38,14 +38,14 @@ export function StoryViewersModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className='fixed inset-0 bg-black/50 z-[110]'
+            className='fixed inset-0 bg-black/50 z-110'
           />
 
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className='fixed inset-x-4 top-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl z-[110] max-h-[80vh] flex flex-col max-w-md mx-auto'
+            className='fixed inset-x-4 top-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl z-110 max-h-[80vh] flex flex-col max-w-md mx-auto'
           >
             <div className='flex items-center justify-between p-3 sm:p-4 border-b'>
               <div className='flex items-center gap-2'>

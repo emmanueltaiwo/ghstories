@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, type PanInfo } from 'motion/react';
 import { X, Heart, Eye, Star } from 'lucide-react';
 import { useQuery, useMutation } from 'convex/react';
@@ -48,6 +48,9 @@ export function StoryViewer({
   const [isPaused, setIsPaused] = useState(false);
   const [showViewersModal, setShowViewersModal] = useState(false);
   const { setStoryViewerOpen } = useStoryViewerOpen();
+  const startTimeRef = useRef<number>(Date.now());
+  const pausedAtRef = useRef<number | null>(null);
+  const hasTriggeredRef = useRef(false);
 
   const storyId = story.id as Id<'stories'>;
 
@@ -76,22 +79,39 @@ export function StoryViewer({
   }, [storyId, currentUserId, story.userId, recordView]);
 
   useEffect(() => {
-    if (isPaused || progress >= 100) {
-      if (progress >= 100 && !isPaused) {
-        if (hasNext && onNext) onNext();
-        else onClose();
-      }
+    startTimeRef.current = Date.now();
+    pausedAtRef.current = null;
+    hasTriggeredRef.current = false;
+    setProgress(0);
+  }, [storyId]);
+
+  useEffect(() => {
+    if (isPaused) {
+      if (pausedAtRef.current === null) pausedAtRef.current = Date.now();
       return;
+    }
+    if (pausedAtRef.current !== null) {
+      const elapsed = pausedAtRef.current - startTimeRef.current;
+      startTimeRef.current = Date.now() - elapsed;
+      pausedAtRef.current = null;
     }
 
     const duration = 5000;
-    const interval = 100;
-    const increment = (interval / duration) * 100;
-    const timer = setInterval(() => {
-      setProgress((prev) => Math.min(100, prev + increment));
-    }, interval);
+    const tick = () => {
+      if (hasTriggeredRef.current) return;
+      const elapsed = Date.now() - startTimeRef.current;
+      const value = Math.min(100, (elapsed / duration) * 100);
+      setProgress(value);
+      if (value >= 100) {
+        hasTriggeredRef.current = true;
+        if (hasNext && onNext) onNext();
+        else onClose();
+      }
+    };
+    tick();
+    const timer = setInterval(tick, 50);
     return () => clearInterval(timer);
-  }, [isPaused, progress, hasNext, onNext, onClose]);
+  }, [isPaused, hasNext, onNext, onClose]);
 
   const handleReaction = useCallback(
     async (emoji: string) => {
@@ -144,7 +164,7 @@ export function StoryViewer({
       : new Date(story.createdAt).getTime();
 
   return (
-    <div className='fixed inset-0 z-[100] bg-black'>
+    <div className='fixed inset-0 z-100 bg-black'>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -294,10 +314,12 @@ export function StoryViewer({
               transition={{ delay: 0.3 }}
               className='text-white/80 text-xs sm:text-sm font-medium'
             >
-              {new Date(createdAtMs).toLocaleDateString('en-US', {
+              {new Date(createdAtMs).toLocaleString('en-US', {
                 month: 'short',
                 day: 'numeric',
                 year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
               })}
             </motion.div>
           </div>

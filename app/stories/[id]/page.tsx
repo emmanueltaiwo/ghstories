@@ -58,7 +58,7 @@ export default function StoryPage({
     return (
       <div className='min-h-screen flex items-center justify-center bg-black text-white p-4'>
         <div className='text-center max-w-sm'>
-          <h2 className='text-xl sm:text-2xl font-bold mb-4 font-(--font-sketch)'>Story not found</h2>
+          <h2 className='text-xl sm:text-2xl mb-4 font-(--font-sketch)'>Story not found</h2>
 
           <button
             onClick={() => router.push('/feed')}
