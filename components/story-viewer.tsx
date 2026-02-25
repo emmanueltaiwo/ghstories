@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, type PanInfo } from 'motion/react';
-import { X, Heart, Eye, Star } from 'lucide-react';
+import { X, Heart, Eye, Pin } from 'lucide-react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import type { Id } from '@/convex/_generated/dataModel';
@@ -123,7 +123,7 @@ export function StoryViewer({
         await addReaction({ storyId, userId: currentUserId, emoji });
       }
     },
-    [storyId, currentUserId, reactions, addReaction, removeReaction]
+    [storyId, currentUserId, reactions, addReaction, removeReaction],
   );
 
   const handleHighlight = useCallback(async () => {
@@ -152,7 +152,7 @@ export function StoryViewer({
       if (info.offset.x > threshold && onPrevious) onPrevious();
       else if (info.offset.x < -threshold && onNext) onNext();
     },
-    [onNext, onPrevious]
+    [onNext, onPrevious],
   );
 
   const commit = story.commit;
@@ -372,7 +372,7 @@ export function StoryViewer({
                   : 'bg-white/10 text-white hover:bg-white/20 border-white/20'
               }`}
             >
-              <Star
+              <Pin
                 className={`w-5 h-5 ${story.isHighlight ? 'fill-current' : ''}`}
               />
             </motion.button>
