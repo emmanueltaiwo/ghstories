@@ -27,7 +27,11 @@ function HandDrawnUnderline({ delay = 0 }: { delay?: number }) {
   );
 }
 
-const FEATURE_ITEMS = ['24 hour expiry', 'Real-time updates', 'Free forever'];
+const FEATURE_ITEMS = [
+  { label: '24h expiry', key: 'expiry' },
+  { label: 'Real-time', key: 'realtime' },
+  { label: 'Free forever', key: 'free' },
+];
 
 const HOW_IT_WORKS = [
   {
@@ -55,8 +59,8 @@ export default function HomePage() {
 
   return (
     <div className='min-h-screen bg-[#faf8f5] text-black relative overflow-hidden'>
-      <section className='relative lg:min-h-screen flex items-center px-4 sm:px-6 md:px-12 py-12 sm:py-16 md:py-20'>
-        <div className='max-w-7xl mx-auto w-full space-y-8 md:space-y-12'>
+      <section className='relative lg:min-h-screen flex items-center px-4 sm:px-6 md:px-12 py-14 sm:py-20 md:py-24'>
+        <div className='max-w-5xl mx-auto w-full space-y-8 md:space-y-10'>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -107,9 +111,14 @@ export default function HomePage() {
               Every GitHub commit becomes an ephemeral story. Share your coding
               journey with the developer community.
             </p>
-            <div className='flex flex-wrap gap-6 text-sm text-black/70 font-(--font-sketch)'>
+            <div className='flex flex-wrap gap-2'>
               {FEATURE_ITEMS.map((item) => (
-                <span key={item}>• {item}</span>
+                <span
+                  key={item.key}
+                  className='inline-block px-3 py-1.5 rounded-lg border-2 border-black/20 bg-white/80 text-sm text-black/80 font-(--font-sketch)'
+                >
+                  {item.label}
+                </span>
               ))}
             </div>
           </motion.div>
@@ -144,38 +153,40 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className='relative px-4 sm:px-6 md:px-12 py-12 md:py-20 bg-[#faf8f5]'>
-        <div className='max-w-7xl mx-auto'>
+      <section className='relative px-4 sm:px-6 md:px-12 py-16 md:py-24 bg-[#faf8f5]'>
+        <div className='max-w-5xl mx-auto'>
+          <p className='text-sm text-black/50 uppercase tracking-wider font-(--font-sketch) mb-3'>
+            How it works
+          </p>
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className='text-3xl sm:text-4xl md:text-5xl font-(--font-sketch) mb-8 md:mb-12'
-            style={{ transform: 'rotate(-0.5deg)' }}
+            className='text-2xl sm:text-3xl md:text-4xl font-(--font-sketch) mb-10 md:mb-12 text-black'
           >
-            How it works
+            Three steps to stories
           </motion.h2>
-          <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8'>
+          <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6'>
             {HOW_IT_WORKS.map((item, i) => (
               <motion.div
                 key={item.step}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className='relative p-4 sm:p-5 md:p-6 bg-white border-[3px] border-black rounded-2xl'
-                style={{ transform: i % 2 === 0 ? 'rotate(-0.5deg)' : 'rotate(0.5deg)' }}
+                transition={{ delay: i * 0.08 }}
+                className='relative p-5 md:p-6 bg-white border-2 border-black rounded-2xl shadow-[3px_3px_0_0_rgba(0,0,0,1)]'
+                style={{ transform: `rotate(${i === 0 ? -0.5 : i === 1 ? 0 : 0.5}deg)` }}
               >
-                <div className='w-12 h-12 border-[3px] border-black rounded-xl flex items-center justify-center mb-4 bg-[#faf8f5]'>
-                  <item.icon className='w-6 h-6' />
+                <div className='w-10 h-10 border-2 border-black rounded-lg flex items-center justify-center mb-4 bg-[#faf8f5]'>
+                  <item.icon className='w-5 h-5' />
                 </div>
-                <span className='text-sm text-black/60 font-(--font-sketch)'>
+                <span className='text-xs text-black/50 font-(--font-sketch)'>
                   Step {item.step}
                 </span>
-                <h3 className='text-xl font-(--font-sketch) mt-1 mb-3'>
+                <h3 className='text-lg font-(--font-sketch) mt-0.5 mb-2 text-black'>
                   {item.title}
                 </h3>
-                <p className='text-black/70 text-sm font-(--font-sketch) leading-relaxed'>
+                <p className='text-black/65 text-sm font-(--font-sketch) leading-relaxed'>
                   {item.desc}
                 </p>
               </motion.div>
@@ -184,88 +195,94 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className='relative px-4 sm:px-6 md:px-12 py-12 md:py-20 bg-[#faf8f5]'>
-        <div className='max-w-3xl mx-auto'>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+      <section className='relative px-4 sm:px-6 md:px-12 py-16 md:py-24 bg-[#f5f3ef]'>
+        <div className='max-w-5xl mx-auto'>
+          <p className='text-sm text-black/50 uppercase tracking-wider font-(--font-sketch) mb-3'>
+            Why ghstories
+          </p>
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className='p-5 sm:p-6 md:p-10 bg-white border-[3px] border-black rounded-2xl text-center'
-            style={{ transform: 'rotate(0.5deg)' }}
+            className='text-2xl sm:text-3xl md:text-4xl font-(--font-sketch) mb-8 md:mb-10 text-black'
           >
-            <h2 className='text-2xl sm:text-3xl md:text-4xl font-(--font-sketch) mb-3 md:mb-4'>
-              Connect a repository
-            </h2>
-            <p className='text-black/70 font-(--font-sketch) mb-4 md:mb-6 max-w-xl mx-auto text-sm sm:text-base'>
-              After signing in, go to your profile and use the Repositories section to connect any GitHub repo. We set up the webhook for you—no copy-pasting URLs or digging through repo settings.
-            </p>
-            {!isAuthenticated && (
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => signIn()}
-                className='inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 border-[3px] border-black bg-black text-white rounded-xl font-(--font-sketch) hover:bg-white hover:text-black transition-colors text-sm sm:text-base'
-              >
-                Sign in with GitHub
-                <Github className='w-5 h-5' />
-              </motion.button>
-            )}
-            {isAuthenticated && (() => {
-              const username = (user as { username?: string })?.username;
-              return (
-                <Link
-                  href={username ? `/profile/${username}` : '/feed'}
-                  className='inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 border-[3px] border-black bg-white text-black rounded-xl font-(--font-sketch) hover:bg-black hover:text-white transition-colors text-sm sm:text-base'
-                >
-                  {username ? 'Connect a repo in your profile' : 'Go to feed'}
-                  <ArrowRight className='w-5 h-5' />
-                </Link>
-              );
-            })()}
-          </motion.div>
-        </div>
-      </section>
-
-      <section className='relative px-4 sm:px-6 md:px-12 py-12 md:py-20 bg-[#faf8f5]'>
-        <div className='max-w-3xl mx-auto'>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className='p-5 sm:p-6 md:p-10 bg-white border-[3px] border-black rounded-2xl text-center'
-            style={{ transform: 'rotate(-0.5deg)' }}
-          >
-            <div className='w-12 h-12 border-[3px] border-black rounded-xl flex items-center justify-center mx-auto mb-4 bg-[#faf8f5]'>
-              <UserPlus className='w-6 h-6' />
-            </div>
-            <h2 className='text-2xl sm:text-3xl md:text-4xl font-(--font-sketch) mb-3 md:mb-4'>
-              Follow devs on GitHub, auto-follow on ghstories
-            </h2>
-            <p className='text-black/70 font-(--font-sketch) mb-0 max-w-xl mx-auto text-sm sm:text-base'>
-              When you follow developers on GitHub, we sync your following list and automatically follow them here. Your feed fills with their commit stories—no extra steps.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      <footer className='border-t-[3px] border-black px-4 sm:px-6 md:px-12 py-6 md:py-8 bg-[#faf8f5]'>
-        <div className='max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-sm text-black/70 font-(--font-sketch)'>
-          <div className='flex items-center gap-3'>
-            <div
-              className='w-8 h-8 border-[3px] border-black rounded-lg flex items-center justify-center bg-white'
-              style={{ transform: 'rotate(-2deg)' }}
+            Connect repos · Sync follows
+          </motion.h2>
+          <div className='grid md:grid-cols-2 gap-5 md:gap-6'>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className='p-5 md:p-6 bg-white border-2 border-black rounded-2xl shadow-[3px_3px_0_0_rgba(0,0,0,1)]'
+              style={{ transform: 'rotate(-0.5deg)' }}
             >
-              <Github
-                className='w-4 h-4'
-                style={{ transform: 'rotate(2deg)' }}
-              />
-            </div>
-            <span className='text-lg'>ghstories</span>
+              <div className='w-10 h-10 border-2 border-black rounded-lg flex items-center justify-center mb-4 bg-[#faf8f5]'>
+                <Github className='w-5 h-5' />
+              </div>
+              <h3 className='text-lg font-(--font-sketch) mb-2 text-black'>
+                Connect a repository
+              </h3>
+              <p className='text-black/65 text-sm font-(--font-sketch) leading-relaxed mb-5'>
+                In your profile, connect any GitHub repo. We add the webhook for you—no copy-pasting or digging through repo settings.
+              </p>
+              {!isAuthenticated && (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => signIn()}
+                  className='inline-flex items-center gap-2 px-4 py-2 border-2 border-black bg-black text-white rounded-lg font-(--font-sketch) text-sm hover:bg-white hover:text-black transition-colors'
+                >
+                  Sign in with GitHub
+                  <ArrowRight className='w-4 h-4' />
+                </motion.button>
+              )}
+              {isAuthenticated && (() => {
+                const username = (user as { username?: string })?.username;
+                return (
+                  <Link
+                    href={username ? `/profile/${username}` : '/feed'}
+                    className='inline-flex items-center gap-2 px-4 py-2 border-2 border-black bg-white text-black rounded-lg font-(--font-sketch) text-sm hover:bg-black hover:text-white transition-colors'
+                  >
+                    {username ? 'Go to profile' : 'Go to feed'}
+                    <ArrowRight className='w-4 h-4' />
+                  </Link>
+                );
+              })()}
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className='p-5 md:p-6 bg-white border-2 border-black rounded-2xl shadow-[3px_3px_0_0_rgba(0,0,0,1)]'
+              style={{ transform: 'rotate(0.5deg)' }}
+            >
+              <div className='w-10 h-10 border-2 border-black rounded-lg flex items-center justify-center mb-4 bg-[#faf8f5]'>
+                <UserPlus className='w-5 h-5' />
+              </div>
+              <h3 className='text-lg font-(--font-sketch) mb-2 text-black'>
+                Follow on GitHub → follow on ghstories
+              </h3>
+              <p className='text-black/65 text-sm font-(--font-sketch) leading-relaxed'>
+                We sync your GitHub following list. Anyone you follow there is automatically followed here, so your feed fills with their commit stories.
+              </p>
+            </motion.div>
           </div>
-          <div className='flex gap-6 text-xs'>
+        </div>
+      </section>
+
+      <footer className='border-t-2 border-black/20 px-4 sm:px-6 md:px-12 py-6 md:py-8 bg-[#faf8f5]'>
+        <div className='max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-black/60 font-(--font-sketch)'>
+          <div className='flex items-center gap-2'>
+            <div className='w-8 h-8 border-2 border-black rounded-lg flex items-center justify-center bg-white'>
+              <Github className='w-4 h-4' />
+            </div>
+            <span className='text-base font-(--font-sketch)'>ghstories</span>
+          </div>
+          <div className='flex gap-4 text-xs'>
             <span>Open Source</span>
-            <span>•</span>
-            <span>Free Forever</span>
+            <span>·</span>
+            <span>Free forever</span>
           </div>
         </div>
       </footer>
