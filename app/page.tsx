@@ -55,7 +55,7 @@ export default function HomePage() {
 
   return (
     <div className='min-h-screen bg-[#faf8f5] text-black relative overflow-hidden'>
-      <section className='relative min-h-screen flex items-center px-4 sm:px-6 md:px-12 py-12 sm:py-16 md:py-20'>
+      <section className='relative min-h-screen flex items-center px-4 sm:px-6 md:px-12 py-5 sm:py-10 md:py-20'>
         <div className='max-w-7xl mx-auto w-full space-y-8 md:space-y-12'>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -164,7 +164,9 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 className='relative p-4 sm:p-5 md:p-6 bg-white border-[3px] border-black rounded-2xl'
-                style={{ transform: i % 2 === 0 ? 'rotate(-0.5deg)' : 'rotate(0.5deg)' }}
+                style={{
+                  transform: i % 2 === 0 ? 'rotate(-0.5deg)' : 'rotate(0.5deg)',
+                }}
               >
                 <div className='w-12 h-12 border-[3px] border-black rounded-xl flex items-center justify-center mb-4 bg-[#faf8f5]'>
                   <item.icon className='w-6 h-6' />
@@ -197,7 +199,9 @@ export default function HomePage() {
               Connect a repository
             </h2>
             <p className='text-black/70 font-(--font-sketch) mb-4 md:mb-6 max-w-xl mx-auto text-sm sm:text-base'>
-              After signing in, go to your profile and use the Repositories section to connect any GitHub repo. We set up the webhook for you—no copy-pasting URLs or digging through repo settings.
+              After signing in, go to your profile and use the Repositories
+              section to connect any GitHub repo. We set up the webhook for
+              you—no copy-pasting URLs or digging through repo settings.
             </p>
             {!isAuthenticated && (
               <motion.button
@@ -210,18 +214,19 @@ export default function HomePage() {
                 <Github className='w-5 h-5' />
               </motion.button>
             )}
-            {isAuthenticated && (() => {
-              const username = (user as { username?: string })?.username;
-              return (
-                <Link
-                  href={username ? `/profile/${username}` : '/feed'}
-                  className='inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 border-[3px] border-black bg-white text-black rounded-xl font-(--font-sketch) hover:bg-black hover:text-white transition-colors text-sm sm:text-base'
-                >
-                  {username ? 'Connect a repo in your profile' : 'Go to feed'}
-                  <ArrowRight className='w-5 h-5' />
-                </Link>
-              );
-            })()}
+            {isAuthenticated &&
+              (() => {
+                const username = (user as { username?: string })?.username;
+                return (
+                  <Link
+                    href={username ? `/profile/${username}` : '/feed'}
+                    className='inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 border-[3px] border-black bg-white text-black rounded-xl font-(--font-sketch) hover:bg-black hover:text-white transition-colors text-sm sm:text-base'
+                  >
+                    {username ? 'Connect a repo in your profile' : 'Go to feed'}
+                    <ArrowRight className='w-5 h-5' />
+                  </Link>
+                );
+              })()}
           </motion.div>
         </div>
       </section>

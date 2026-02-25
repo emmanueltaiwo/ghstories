@@ -9,7 +9,7 @@ import { StoryViewer } from '@/components/story-viewer';
 import {
   UserPlus,
   UserMinus,
-  Star,
+  Pin,
   Eye,
   Github,
   Plus,
@@ -499,7 +499,7 @@ export default function ProfilePage({
                       }}
                       className='absolute top-2 right-2 z-20 p-1.5 bg-white border border-black rounded-full hover:bg-yellow-50'
                     >
-                      <Star
+                      <Pin
                         className={`w-4 h-4 ${story.isHighlight ? 'fill-yellow-400 text-yellow-500' : 'text-gray-400'}`}
                       />
                     </motion.button>
@@ -547,7 +547,7 @@ export default function ProfilePage({
 
                 <div className='p-4 bg-[#faf8f5] border-2 border-black rounded-lg'>
                   <div className='flex items-center gap-2 mb-1'>
-                    <Star className='w-5 h-5 text-yellow-500 fill-yellow-500' />
+                    <Pin className='w-5 h-5 text-yellow-500 fill-yellow-500' />
                     <h3 className='text-base font-(--font-sketch)'>
                       Highlights
                     </h3>
