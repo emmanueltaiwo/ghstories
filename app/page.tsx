@@ -55,7 +55,7 @@ export default function HomePage() {
 
   return (
     <div className='min-h-screen bg-[#faf8f5] text-black relative overflow-hidden'>
-      <section className='relative min-h-screen flex items-center px-4 sm:px-6 md:px-12 py-5 sm:py-10 md:py-20'>
+      <section className='relative lg:min-h-screen flex items-center px-4 sm:px-6 md:px-12 py-5 sm:py-10 md:py-20'>
         <div className='max-w-7xl mx-auto w-full space-y-8 md:space-y-12'>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
