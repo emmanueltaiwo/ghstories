@@ -167,7 +167,7 @@ export default function FeedPage() {
 
   return (
     <div className='min-h-screen bg-[#faf8f5]'>
-      <div className='max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6'>
+      <div className='max-w-4xl mx-auto px-4 sm:px-6 py-4 pb-24 sm:py-6 sm:pb-24 lg:pb-6'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

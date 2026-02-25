@@ -252,7 +252,7 @@ export default function ProfilePage({
 
   return (
     <div className='min-h-screen bg-[#faf8f5]'>
-      <div className='max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8'>
+      <div className='max-w-4xl mx-auto px-4 sm:px-6 py-4 pb-24 sm:py-8 sm:pb-24 lg:pb-8'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
