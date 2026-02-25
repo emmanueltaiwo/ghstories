@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/hooks/use-auth';
 import { motion } from 'motion/react';
-import { ArrowRight, Github, GitBranch, Zap, Eye } from 'lucide-react';
+import { ArrowRight, Github, GitBranch, Zap, Eye, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 
 function HandDrawnUnderline({ delay = 0 }: { delay?: number }) {
@@ -222,6 +222,28 @@ export default function HomePage() {
                 </Link>
               );
             })()}
+          </motion.div>
+        </div>
+      </section>
+
+      <section className='relative px-4 sm:px-6 md:px-12 py-12 md:py-20 bg-[#faf8f5]'>
+        <div className='max-w-3xl mx-auto'>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className='p-5 sm:p-6 md:p-10 bg-white border-[3px] border-black rounded-2xl text-center'
+            style={{ transform: 'rotate(-0.5deg)' }}
+          >
+            <div className='w-12 h-12 border-[3px] border-black rounded-xl flex items-center justify-center mx-auto mb-4 bg-[#faf8f5]'>
+              <UserPlus className='w-6 h-6' />
+            </div>
+            <h2 className='text-2xl sm:text-3xl md:text-4xl font-(--font-sketch) mb-3 md:mb-4'>
+              Follow devs on GitHub, auto-follow on ghstories
+            </h2>
+            <p className='text-black/70 font-(--font-sketch) mb-0 max-w-xl mx-auto text-sm sm:text-base'>
+              When you follow developers on GitHub, we sync your following list and automatically follow them here. Your feed fills with their commit stories—no extra steps.
+            </p>
           </motion.div>
         </div>
       </section>
