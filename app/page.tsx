@@ -184,9 +184,10 @@ export default function HomePage() {
               transition={{ delay: 0.75 }}
               className='max-w-2xl space-y-5 md:space-y-6'
             >
-              <p className='text-lg leading-relaxed text-black/90 font-(--font-sketch)'>
+              <p className='text-lg md:text-xl leading-relaxed text-black/90 font-(--font-sketch)'>
                 Every push becomes an ephemeral story. Share your coding journey
-                with the dev community—no extra tools, just your normal workflow.
+                with the dev community—no extra tools, just your normal
+                workflow.
               </p>
               <div className='flex flex-wrap gap-2'>
                 {FEATURE_ITEMS.map((item, i) => (
@@ -248,10 +249,16 @@ export default function HomePage() {
               Live preview
             </span>
             <motion.div
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              animate={{
+                y: [0, -6, 0],
+                rotate: [-2, 5, -2],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
               className='w-full max-w-full md:max-w-full lg:max-w-[520px] rounded-2xl border-[3px] border-black bg-[#faf8f5] shadow-[8px_8px_0_0_rgba(0,0,0,1)] overflow-hidden'
-              style={{ transform: 'rotate(1deg)' }}
             >
               <div className='px-4 pt-4 pb-2 border-b border-black/10 bg-white/50'>
                 <p className='text-xs text-black/50 font-(--font-sketch) mb-0.5'>
@@ -317,7 +324,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id='how-it-works' className='relative px-4 sm:px-6 md:px-12 py-16 md:py-24 bg-[#faf8f5]'>
+      <section
+        id='how-it-works'
+        className='relative px-4 sm:px-6 md:px-12 py-16 md:py-24 bg-[#faf8f5]'
+      >
         <div className='max-w-5xl mx-auto'>
           <p className='text-sm text-black/50 uppercase tracking-wider font-(--font-sketch) mb-3'>
             How it works
