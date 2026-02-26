@@ -118,18 +118,19 @@ export default function HomePage() {
       {/* Hero background: dot pattern + soft blobs */}
       <div className='absolute inset-0 pointer-events-none'>
         <div
-          className='absolute inset-0 opacity-[0.4]'
+          className='absolute inset-0 opacity-[0.5]'
           style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0,0,0,0.12) 1px, transparent 0)`,
-            backgroundSize: '24px 24px',
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0,0,0,0.1) 1px, transparent 0)`,
+            backgroundSize: '20px 20px',
           }}
         />
-        <div className='absolute top-1/4 -right-20 w-80 h-80 rounded-full bg-amber-200/30 blur-3xl' />
-        <div className='absolute bottom-1/4 -left-16 w-64 h-64 rounded-full bg-stone-300/25 blur-3xl' />
+        <div className='absolute top-1/4 -right-20 w-96 h-96 rounded-full bg-amber-200/35 blur-3xl' />
+        <div className='absolute bottom-1/3 -left-20 w-72 h-72 rounded-full bg-stone-300/30 blur-3xl' />
+        <div className='absolute top-1/2 right-1/3 w-48 h-48 rounded-full bg-amber-100/25 blur-2xl' />
       </div>
 
       <section className='relative lg:min-h-screen flex items-center px-4 sm:px-6 md:px-12 py-14 sm:py-20 md:py-24'>
-        <div className='max-w-6xl mx-auto w-full flex flex-col lg:flex-row lg:items-center lg:justify-between gap-12 lg:gap-16'>
+        <div className='max-w-6xl mx-auto w-full flex flex-col lg:flex-row lg:items-center lg:justify-between gap-14 lg:gap-20'>
           <div className='space-y-8 md:space-y-10 flex-1'>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -137,59 +138,67 @@ export default function HomePage() {
               transition={{ delay: 0.2 }}
               className='space-y-8'
             >
-              <div className='inline-flex items-center gap-2 px-3 py-1.5 rounded-full border-2 border-black/25 bg-white/90 text-sm text-black/80 uppercase tracking-wider font-(--font-sketch) shadow-sm'>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+                className='inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-black/30 bg-white text-sm text-black/85 uppercase tracking-wider font-(--font-sketch) shadow-[2px_2px_0_0_rgba(0,0,0,0.15)]'
+              >
                 <Github className='w-4 h-4' />
                 GitHub commits → Stories
-              </div>
-              <h1 className='text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] font-(--font-sketch)'>
+              </motion.div>
+              <h1 className='text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.92] font-(--font-sketch) tracking-tight'>
                 <motion.span
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
                   className='block'
                   style={{ transform: 'rotate(-0.5deg)' }}
                 >
                   Turn your
                 </motion.span>
                 <motion.span
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
+                  transition={{ delay: 0.52, duration: 0.5 }}
                   className='block'
                   style={{ transform: 'rotate(0.5deg)' }}
                 >
                   commits into
                 </motion.span>
                 <motion.span
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
+                  transition={{ delay: 0.64, duration: 0.5 }}
                   className='relative inline-block'
                   style={{ transform: 'rotate(-1deg)' }}
                 >
                   stories
-                  <HandDrawnUnderline delay={0.8} />
+                  <HandDrawnUnderline delay={0.85} />
                 </motion.span>
               </h1>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className='max-w-2xl space-y-4 md:space-y-6'
+              transition={{ delay: 0.75 }}
+              className='max-w-2xl space-y-5 md:space-y-6'
             >
-              <p className='text-lg sm:text-xl md:text-2xl leading-relaxed text-black/90 font-(--font-sketch)'>
-                Every GitHub commit becomes an ephemeral story. Share your coding
-                journey with the developer community.
+              <p className='text-lg leading-relaxed text-black/90 font-(--font-sketch)'>
+                Every push becomes an ephemeral story. Share your coding journey
+                with the dev community—no extra tools, just your normal workflow.
               </p>
               <div className='flex flex-wrap gap-2'>
-                {FEATURE_ITEMS.map((item) => (
-                  <span
+                {FEATURE_ITEMS.map((item, i) => (
+                  <motion.span
                     key={item.key}
-                    className='inline-block px-3 py-1.5 rounded-lg border-2 border-black/20 bg-white/80 text-sm text-black/80 font-(--font-sketch)'
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9 + i * 0.06 }}
+                    className='inline-block px-3.5 py-2 rounded-xl border-2 border-black/20 bg-white/90 text-sm text-black/80 font-(--font-sketch) shadow-sm'
                   >
                     {item.label}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
             </motion.div>
@@ -197,39 +206,50 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1 }}
-              className='flex flex-col sm:flex-row gap-4 sm:gap-6'
+              className='flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6'
             >
               {!isAuthenticated && (
                 <motion.button
-                  whileHover={{ scale: 1.05, rotate: [0, -2, 2, 0] }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.03, rotate: [0, -1, 1, 0] }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => signIn()}
-                  className='px-6 py-3 sm:px-10 sm:py-4 border-[3px] border-black bg-black text-white text-base sm:text-lg hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 sm:gap-3 rounded-xl font-(--font-sketch)'
+                  className='px-6 py-3.5 sm:px-10 sm:py-4 border-[3px] border-black bg-black text-white text-base sm:text-lg hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2.5 sm:gap-3 rounded-xl font-(--font-sketch) shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]'
                   style={{ transform: 'rotate(-1deg)' }}
                 >
-                  Get Started
+                  Get started with GitHub
                   <ArrowRight className='w-5 h-5' />
                 </motion.button>
               )}
               {isAuthenticated && (
                 <Link
                   href='/feed'
-                  className='px-6 py-3 sm:px-10 sm:py-4 border-[3px] border-black bg-white text-black text-base sm:text-lg hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2 rounded-xl font-(--font-sketch)'
+                  className='px-6 py-3.5 sm:px-10 sm:py-4 border-[3px] border-black bg-white text-black text-base sm:text-lg hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2 rounded-xl font-(--font-sketch)'
                   style={{ transform: 'rotate(1deg)' }}
                 >
                   View Feed
                 </Link>
               )}
+              <a
+                href='#how-it-works'
+                className='text-sm text-black/60 font-(--font-sketch) hover:text-black underline underline-offset-2 decoration-black/30 hover:decoration-black transition-colors sm:ml-1'
+              >
+                See how it works
+              </a>
             </motion.div>
           </div>
 
           <motion.div
-            initial={{ opacity: 0, x: 24 }}
+            initial={{ opacity: 0, x: 32 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.9, duration: 0.5 }}
-            className='w-full md:w-full lg:w-auto lg:shrink-0 flex justify-center lg:justify-end'
+            transition={{ delay: 0.9, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className='w-full md:w-full lg:w-auto lg:shrink-0 flex flex-col items-center lg:items-end'
           >
-            <div
+            <span className='text-xs text-black/50 font-(--font-sketch) uppercase tracking-wider mb-3 lg:mr-1'>
+              Live preview
+            </span>
+            <motion.div
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               className='w-full max-w-full md:max-w-full lg:max-w-[520px] rounded-2xl border-[3px] border-black bg-[#faf8f5] shadow-[8px_8px_0_0_rgba(0,0,0,1)] overflow-hidden'
               style={{ transform: 'rotate(1deg)' }}
             >
@@ -292,12 +312,12 @@ export default function HomePage() {
                   </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      <section className='relative px-4 sm:px-6 md:px-12 py-16 md:py-24 bg-[#faf8f5]'>
+      <section id='how-it-works' className='relative px-4 sm:px-6 md:px-12 py-16 md:py-24 bg-[#faf8f5]'>
         <div className='max-w-5xl mx-auto'>
           <p className='text-sm text-black/50 uppercase tracking-wider font-(--font-sketch) mb-3'>
             How it works
