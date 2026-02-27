@@ -26,8 +26,60 @@ const cabinSketch = Cabin_Sketch({
 });
 
 export const metadata: Metadata = {
-  title: 'ghstories - Turn commits into stories',
-  description: 'Transform your GitHub commits into ephemeral stories',
+  title: 'ghstories - Turn your commits into stories',
+  description:
+    'Every push becomes an ephemeral story. Share your coding journey with the dev community—no extra tools, just your normal workflow.',
+  keywords: [
+    'ghstories',
+    'GitHub stories',
+    'GitHub commits',
+    'Commit stories',
+    'Developer stories',
+    'Developer social feed',
+    'GitHub activity feed',
+    'Code storytelling',
+    'Open source stories',
+    'Dev community',
+  ],
+  authors: [{ name: 'Emmanuel Taiwo' }],
+  creator: 'Emmanuel Taiwo',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://ghstories.xyz',
+    title: 'ghstories - Turn your commits into stories',
+    description:
+      'Every push becomes an ephemeral story. Share your coding journey with the dev community—no extra tools, just your normal workflow.',
+    siteName: 'ghstories',
+    images: [
+      {
+        url: '/og.png',
+        width: 1200,
+        height: 630,
+        alt: 'ghstories - Turn your commits into stories',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ghstories - Turn your commits into stories',
+    description:
+      'Turn your GitHub commits into ephemeral stories and share your coding journey with the dev community.',
+    creator: '@ez0xai',
+    images: ['/og.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  metadataBase: new URL('https://ghstories.xyz'),
 };
 
 export default async function RootLayout({
