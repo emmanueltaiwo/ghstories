@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -122,7 +122,9 @@
   }
   body {
     @apply bg-[#faf8f5] text-black;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
     font-family: var(--font-sketch), system-ui, sans-serif;
   }
   html {
@@ -143,4 +145,8 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+}
+
+button {
+  cursor: pointer;
 }
