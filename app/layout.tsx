@@ -8,6 +8,7 @@ import { Sidebar } from '@/components/sidebar';
 import { Navbar } from '@/components/navbar';
 import { SketchyGrid } from '@/components/sketchy-grid';
 import { getToken } from '@/lib/auth-server';
+import { Analytics } from '@vercel/analytics/next';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -112,6 +113,7 @@ export default async function RootLayout({
             </StoryViewerOpenProvider>
           </Providers>
         </ConvexClientProvider>
+        <Analytics />
       </body>
     </html>
   );
