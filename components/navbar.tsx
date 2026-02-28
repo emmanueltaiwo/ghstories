@@ -3,12 +3,27 @@
 import { useAuth } from '@/hooks/use-auth';
 import { motion } from 'motion/react';
 import { usePathname } from 'next/navigation';
-import { Github } from 'lucide-react';
+import { Github, Star } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
+const GITHUB_REPO = 'emmanueltaiwo/ghstories';
+const GITHUB_REPO_URL = `https://github.com/${GITHUB_REPO}`;
 
 export function Navbar() {
   const { isAuthenticated, isLoading, signIn } = useAuth();
   const pathname = usePathname();
+  const [stars, setStars] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch(`https://api.github.com/repos/${GITHUB_REPO}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data.stargazers_count === 'number')
+          setStars(data.stargazers_count);
+      })
+      .catch(() => {});
+  }, []);
 
   if (isAuthenticated && pathname !== '/') return null;
 
@@ -36,6 +51,23 @@ export function Navbar() {
           </Link>
 
           <div className='flex items-center gap-2 sm:gap-3'>
+            <motion.a
+              href={GITHUB_REPO_URL}
+              target='_blank'
+              rel='noopener noreferrer'
+              whileHover={{ scale: 1.05, rotate: [0, -1, 1, 0] }}
+              whileTap={{ scale: 0.95 }}
+              className='flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 border-2 sm:border-[3px] border-black bg-white hover:bg-black hover:text-white transition-all rounded-lg text-sm sm:text-base'
+              style={{ fontFamily: 'var(--font-sketch)' }}
+            >
+              <Star className='w-4 h-4 sm:w-[18px] sm:h-[18px] fill-current' />
+              <span>Star</span>
+              {stars !== null && (
+                <span className='font-sans font-medium tabular-nums'>
+                  {stars >= 1000 ? `${(stars / 1000).toFixed(1)}k` : stars}
+                </span>
+              )}
+            </motion.a>
             {isLoading ? (
               <motion.div
                 animate={{ rotate: 360 }}
@@ -57,7 +89,6 @@ export function Navbar() {
                 </motion.span>
               </Link>
             ) : (
-
               <motion.button
                 whileHover={{ scale: 1.05, rotate: [0, -1, 1, 0] }}
                 whileTap={{ scale: 0.95 }}
