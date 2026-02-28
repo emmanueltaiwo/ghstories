@@ -55,17 +55,14 @@ export function Navbar() {
               href={GITHUB_REPO_URL}
               target='_blank'
               rel='noopener noreferrer'
-              whileHover={{ scale: 1.05, rotate: [0, -1, 1, 0] }}
-              whileTap={{ scale: 0.95 }}
-              className='flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 border-2 sm:border-[3px] border-black bg-white hover:bg-black hover:text-white transition-all rounded-lg text-sm sm:text-base'
-              style={{ fontFamily: 'var(--font-sketch)' }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className='flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/5 border border-black/15 text-black/80 hover:bg-amber-50 hover:border-amber-300/60 hover:text-amber-800 transition-colors text-sm font-medium'
             >
-              <Star className='w-4 h-4 sm:w-[18px] sm:h-[18px] fill-current' />
+              <Star className='w-3.5 h-3.5 fill-amber-500 text-amber-500' />
               <span>Star</span>
               {stars !== null && (
-                <span className='font-sans font-medium tabular-nums'>
-                  {stars >= 1000 ? `${(stars / 1000).toFixed(1)}k` : stars}
-                </span>
+                <span className='tabular-nums text-black/70'>{stars >= 1000 ? `${(stars / 1000).toFixed(1)}k` : stars}</span>
               )}
             </motion.a>
             {isLoading ? (
