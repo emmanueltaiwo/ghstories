@@ -10,6 +10,7 @@ import {
   Eye,
   UserPlus,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 function HandDrawnUnderline({ delay = 0 }: { delay?: number }) {
@@ -454,8 +455,14 @@ export default function HomePage() {
       <footer className='border-t-2 border-black/20 px-4 sm:px-6 md:px-12 py-6 md:py-8 bg-[#faf8f5] mt-10'>
         <div className='max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-black/60 font-(--font-sketch)'>
           <div className='flex items-center gap-2'>
-            <div className='w-8 h-8 border-2 border-black rounded-lg flex items-center justify-center bg-white'>
-              <Github className='w-4 h-4' />
+            <div className='w-8 h-8 border-2 border-black rounded-lg flex items-center justify-center bg-white overflow-hidden'>
+              <Image
+                src='/logo.png'
+                alt='ghstories'
+                width={32}
+                height={32}
+                className='w-4 h-4 object-contain'
+              />
             </div>
             <span className='text-base font-(--font-sketch)'>ghstories</span>
           </div>

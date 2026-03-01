@@ -3,7 +3,8 @@
 import { useAuth } from '@/hooks/use-auth';
 import { motion } from 'motion/react';
 import { usePathname } from 'next/navigation';
-import { Github, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -34,11 +35,15 @@ export function Navbar() {
           <Link href='/' className='flex items-center gap-2 sm:gap-3'>
             <motion.div
               whileHover={{ rotate: [0, -2, 2, 0] }}
-              className='w-9 h-9 sm:w-10 sm:h-10 border-2 sm:border-[3px] border-black rounded-lg flex items-center justify-center bg-white'
+              className='w-9 h-9 sm:w-10 sm:h-10 border-2 sm:border-[3px] border-black rounded-lg flex items-center justify-center bg-white overflow-hidden'
               style={{ transform: 'rotate(-2deg)' }}
             >
-              <Github
-                className='w-5 h-5'
+              <Image
+                src='/logo.png'
+                alt='ghstories'
+                width={40}
+                height={40}
+                className='w-5 h-5 sm:w-6 sm:h-6 object-contain'
                 style={{ transform: 'rotate(2deg)' }}
               />
             </motion.div>

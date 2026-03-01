@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
 import { useStoryViewerOpen } from '@/lib/story-viewer-context';
-import { Github, Home, LogOut } from 'lucide-react';
+import { Home, LogOut } from 'lucide-react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
 
@@ -71,7 +71,8 @@ export function Sidebar({ variant = 'left' }: { variant?: SidebarVariant }) {
               }`}
               style={{
                 borderRadius: '10px 14px 10px 14px',
-                transform: pathname === '/feed' ? 'rotate(-0.5deg)' : 'rotate(0.5deg)',
+                transform:
+                  pathname === '/feed' ? 'rotate(-0.5deg)' : 'rotate(0.5deg)',
               }}
             >
               <Home className='w-5 h-5 shrink-0' />
@@ -87,18 +88,22 @@ export function Sidebar({ variant = 'left' }: { variant?: SidebarVariant }) {
             <motion.div
               whileTap={{ scale: 0.95 }}
               className={`w-full flex flex-col items-center justify-center gap-1 py-2 rounded-lg border-2 border-black transition-colors ${
-                isProfileActive ? 'bg-black text-white' : 'bg-[#faf8f5] text-black'
+                isProfileActive
+                  ? 'bg-black text-white'
+                  : 'bg-[#faf8f5] text-black'
               }`}
               style={{
                 borderRadius: '10px 14px 10px 14px',
-                transform: isProfileActive ? 'rotate(-0.5deg)' : 'rotate(0.5deg)',
+                transform: isProfileActive
+                  ? 'rotate(-0.5deg)'
+                  : 'rotate(0.5deg)',
               }}
             >
               <div className='w-6 h-6 rounded-full overflow-hidden border-2 border-current shrink-0'>
                 <Image
                   src={
-                    ((user as { avatarUrl?: string }).avatarUrl ??
-                      (user as { image?: string }).image) ??
+                    (user as { avatarUrl?: string }).avatarUrl ??
+                    (user as { image?: string }).image ??
                     ''
                   }
                   alt=''
@@ -147,11 +152,15 @@ export function Sidebar({ variant = 'left' }: { variant?: SidebarVariant }) {
               className='relative'
             >
               <div
-                className='w-10 h-10 border-[3px] border-black rounded-lg flex items-center justify-center bg-white'
+                className='w-10 h-10 border-[3px] border-black rounded-lg flex items-center justify-center bg-white overflow-hidden'
                 style={{ transform: 'rotate(-2deg)' }}
               >
-                <Github
-                  className='w-6 h-6'
+                <Image
+                  src='/logo.png'
+                  alt='ghstories'
+                  width={40}
+                  height={40}
+                  className='w-6 h-6 object-contain'
                   style={{ transform: 'rotate(2deg)' }}
                 />
               </div>
